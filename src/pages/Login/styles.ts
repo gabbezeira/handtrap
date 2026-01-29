@@ -1,10 +1,4 @@
-import styled, { keyframes } from 'styled-components';
-
-const pulseGlow = keyframes`
-  0% { opacity: 0.5; }
-  50% { opacity: 1; }
-  100% { opacity: 0.5; }
-`;
+import styled from 'styled-components';
 
 export const Container = styled.div`
   min-height: 100vh;

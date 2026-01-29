@@ -21,7 +21,7 @@ let dbPromise: Promise<IDBPDatabase<YugiohDB>> | null = null;
 export const getDB = () => {
   if (!dbPromise) {
     dbPromise = openDB<YugiohDB>(DB_NAME, DB_VERSION, {
-      upgrade(db, oldVersion, newVersion, transaction) {
+      upgrade(db, _oldVersion, _newVersion, _transaction) {
         if (!db.objectStoreNames.contains('cards')) {
           const store = db.createObjectStore('cards', { keyPath: 'id' });
           store.createIndex('name', 'name', { unique: false });

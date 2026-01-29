@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
-import { useTheme } from '../../contexts/ThemeContext';
-import { LogOut, FolderOpen, ChevronDown, Moon, Zap } from 'lucide-react';
+import { LogOut, FolderOpen, ChevronDown } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import {
   HeaderContainer,
