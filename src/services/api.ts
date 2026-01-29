@@ -1,9 +1,8 @@
 import axios from 'axios';
 import { metricsManager } from './metrics';
 
-// Create an instance with default config
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || '/api', // Use env var in prod, proxy in dev
+  baseURL: import.meta.env.VITE_API_URL || '/api',
   timeout: 60000,
   headers: {
     'Content-Type': 'application/json',

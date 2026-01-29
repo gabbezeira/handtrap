@@ -430,10 +430,14 @@ export const SectionLabel = styled.h3`
 
 export const CardGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(38px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
   gap: 6px;
   padding: 0.5rem;
   height: auto;
+
+   @media (min-width: 1400px) {
+    grid-template-columns: repeat(auto-fill, minmax(45px, 1fr));
+  }
 `;
 
 export const MiniCard = styled.div`

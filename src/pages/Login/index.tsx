@@ -60,7 +60,7 @@ export const Login = () => {
     return (
         <Container>
             <GlassCard>
-                <Title>Acessar <span>Sistema</span></Title>
+                <Title>Acessar <span>Handtrap</span></Title>
                 <Substring>
                     {isLogin ? 'Entre com suas credenciais para continuar' : 'Crie uma nova conta para começar'}
                 </Substring>

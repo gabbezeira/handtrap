@@ -170,7 +170,11 @@ export const DeckBuilder = () => {
         }
     };
     const sortCardsByName = (cards: CardData[]) => {
-        return [...cards].sort((a, b) => a.name.localeCompare(b.name));
+        return [...cards].sort((a, b) => {
+            const nameA = a.name_en || a.name;
+            const nameB = b.name_en || b.name;
+            return nameA.localeCompare(nameB);
+        });
     };
 
     // Load deck if ID is present

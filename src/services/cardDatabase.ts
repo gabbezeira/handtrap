@@ -9,6 +9,7 @@ export interface CardData {
   id: number;
   konami_id?: number;
   name: string; 
+  name_en?: string;
   type: string;
   frameType: string;
   desc: string;

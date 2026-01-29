@@ -1,4 +1,10 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+
+const pulseGlow = keyframes`
+  0% { opacity: 0.5; }
+  50% { opacity: 1; }
+  100% { opacity: 0.5; }
+`;
 
 export const Container = styled.div`
   min-height: 100vh;
@@ -8,19 +14,21 @@ export const Container = styled.div`
   justify-content: center;
   overflow: hidden;
   
-  /* Dynamic Background - Purple & Blue */
-  background: radial-gradient(circle at top left, var(--bg-secondary) 0%, #000000 50%, #172554 100%);
+  /* Deep Blue Theme Background */
+  background: radial-gradient(circle at center, #0f172a 0%, #000000 100%);
   
+  /* Animated Orbs - Blue & Cyan - Kept but subtle */
   &::before {
     content: '';
     position: absolute;
-    top: -20%;
+    top: -10%;
     left: -10%;
     width: 600px;
     height: 600px;
-    background: radial-gradient(circle, rgba(147, 51, 234, 0.3) 0%, transparent 70%);
-    filter: blur(80px);
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+    filter: blur(100px);
     z-index: 0;
+    opacity: 0.6;
   }
 
   &::after {
@@ -28,93 +36,88 @@ export const Container = styled.div`
     position: absolute;
     bottom: -10%;
     right: -10%;
-    width: 600px;
-    height: 600px;
-    background: radial-gradient(circle, rgba(59, 130, 246, 0.3) 0%, transparent 70%);
-    filter: blur(80px);
+    width: 700px;
+    height: 700px;
+    background: radial-gradient(circle, rgba(6, 182, 212, 0.1) 0%, transparent 70%);
+    filter: blur(100px);
     z-index: 0;
+    opacity: 0.6;
   }
 `;
 
 export const GlassCard = styled.div`
-  background: var(--glass-bg);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid var(--border-color);
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-  padding: 3rem;
+  background: rgba(10, 15, 30, 0.75); 
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  /* Removed heavy shadow/glow */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+  padding: 3.5rem 3rem;
   border-radius: 24px;
   width: 100%;
-  max-width: 440px;
+  max-width: 420px;
   position: relative;
   overflow: hidden;
   transition: transform 0.3s ease;
   animation: fadeIn 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
   z-index: 1;
 
-  /* Subtle border gradient */
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 24px; 
-    padding: 1px;
-    background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05)); 
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    pointer-events: none;
-  }
+  /* Subtle Clean Border Accent using Primary Color */
+  border-top: 1px solid var(--primary-color); 
 `;
 
 export const Title = styled.h1`
   text-align: center;
-  color: var(--text-primary);
+  color: #fff;
   margin-bottom: 0.5rem;
-  font-size: 2rem;
-  font-weight: 700;
+  font-size: 2.2rem;
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  letter-spacing: 0.1em;
-
+  letter-spacing: 0.05em;
+  
+  /* Updated Handtrap to Blue using Global Styles */
   span {
     color: var(--primary-color);
+    background: linear-gradient(135deg, var(--accent-color) 0%, var(--primary-color) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    /* Removed text-shadow glow */
   }
 `;
 
 export const Substring = styled.p`
   text-align: center;
-  color: var(--text-secondary);
-  font-size: 0.9rem;
+  color: #94a3b8;
+  font-size: 0.95rem;
   margin-bottom: 2.5rem;
-  letter-spacing: 0.05em;
+  font-weight: 400;
 `;
 
 export const InputGroup = styled.div`
   position: relative;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.2rem;
 `;
 
 export const Input = styled.input`
   width: 100%;
   padding: 1rem 1rem 1rem 3rem;
-  background: var(--glass-bg);
-  border: var(--glass-border);
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
-  color: var(--text-primary);
+  color: #fff;
   font-family: var(--font-body);
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   font-size: 0.95rem;
 
   &:focus {
     outline: none;
     background: rgba(15, 23, 42, 0.8);
     border-color: var(--primary-color);
-    box-shadow: 0 0 15px rgba(62, 147, 252, 0.2);
+    /* Removed box-shadow glow */
   }
 
   &::placeholder {
-    color: rgba(255, 255, 255, 0.3);
+    color: rgba(255, 255, 255, 0.25);
   }
 `;
 
@@ -123,33 +126,38 @@ export const IconWrapper = styled.div`
   left: 1rem;
   top: 50%;
   transform: translateY(-50%);
-  color: var(--text-secondary);
+  color: #64748b;
   pointer-events: none;
-  font-size: 1.1rem;
+  transition: color 0.3s;
+
+  ${Input}:focus ~ & {
+    color: var(--primary-color);
+  }
 `;
 
 export const Button = styled.button`
   width: 100%;
   padding: 1rem;
-  margin-top: 0.5rem;
+  margin-top: 1rem;
   margin-bottom: 1rem;
-  background: linear-gradient(135deg, var(--primary-color) 0%, #2563eb 100%);
+  background: var(--primary-color); /* Flat primary color */
   color: white;
   border: none;
   border-radius: 12px;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 1rem;
   cursor: pointer;
   letter-spacing: 0.05em;
-  transition: all 0.3s ease;
+  transition: background-color 0.2s ease, transform 0.1s ease;
   text-transform: uppercase;
   position: relative;
   overflow: hidden;
+  /* Removed box-shadow */
   
   &:hover {
-    transform: translateY(-2px);
-    box-shadow: none; /* Removed glow */
-    filter: brightness(1.1);
+    background-color: var(--accent-color); /* Lighter blue on hover */
+    transform: translateY(-1px);
+    /* No glow */
   }
 
   &:active {
@@ -159,13 +167,14 @@ export const Button = styled.button`
   &:disabled {
     opacity: 0.7;
     cursor: not-allowed;
+    background: #334155;
     transform: none;
   }
 `;
 
 export const GoogleButton = styled(Button)`
   background: white;
-  color: var(--bg-secondary);
+  color: #0f172a;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -174,42 +183,48 @@ export const GoogleButton = styled(Button)`
   
   &:hover {
     background: #f8fafc;
-    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
-    transform: translateY(-2px);
+    /* Subtle shadow only for depth, not glow */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); 
+    transform: translateY(-1px);
   }
 `;
 
 export const ToggleText = styled.p`
   text-align: center;
-  color: var(--text-secondary);
+  color: #64748b;
   font-size: 0.9rem;
   cursor: pointer;
-  margin-top: 1rem;
+  margin-top: 1.5rem;
   transition: all 0.2s;
   
   span {
-    color: var(--accent-color);
-    font-weight: 500;
+    color: var(--primary-color);
+    font-weight: 600;
+    margin-left: 4px;
+    
+    &:hover {
+      text-decoration: underline;
+    }
   }
   
   &:hover {
-    color: white;
-    span {
-      color: var(--accent-color);
-    }
+    color: #94a3b8;
   }
 `;
 
 export const ErrorMsg = styled.div`
-  background: rgba(239, 68, 68, 0.1);
-  border: 1px solid var(--error-color);
-  color: var(--error-color);
+  background: rgba(220, 38, 38, 0.1);
+  border: 1px solid rgba(220, 38, 38, 0.2);
+  color: #ef4444;
   text-align: center;
   padding: 0.8rem;
-  border-radius: 8px;
+  border-radius: 12px;
   margin-bottom: 1.5rem;
   font-size: 0.9rem;
-  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 `;
 
 export const Divider = styled.div`
@@ -225,9 +240,10 @@ export const Divider = styled.div`
   }
   
   span {
-    color: var(--text-secondary);
-    font-size: 0.8rem;
+    color: #64748b;
+    font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.1em;
+    font-weight: 600;
   }
 `;
