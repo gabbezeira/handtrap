@@ -48,6 +48,17 @@ function App() {
     };
 
     window.addEventListener('keydown', handleKeyDown);
+
+    // Easter Egg 🥚
+    console.log(
+      "%c YOU ACTIVATED MY TRAP CARD! 🃏 ",
+      "color: #bc2a8d; font-size: 24px; font-weight: bold; background: #171717; padding: 10px; border: 2px solid #e855b7; border-radius: 8px;"
+    );
+    console.log(
+        "%c Stop peeking at my deck list! ",
+      "color: #e855b7; font-size: 14px; font-style: italic;"
+    );
+
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
