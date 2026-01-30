@@ -405,7 +405,7 @@ export const DeckAreaContainer = styled.div`
 export const DeckSection = styled.div`
   background: rgba(255,255,255,0.02);
   border-radius: 12px;
-  padding: 1.5rem;
+  padding: 1.125rem;
   min-height: 150px;
   height: auto;
   border: var(--glass-border);
