@@ -8,7 +8,7 @@ import { CrtEffect } from './components/CrtEffect';
 import { MobileBlocker } from './components/MobileBlocker';
 import { DebugProvider } from './contexts/DebugContext';
 import { ThemeProvider } from './contexts/ThemeContext';
-import { Analytics } from "@vercel/analytics/next"
+import { Analytics } from "@vercel/analytics/react"
 
 // Pages
 import { DeckBuilder } from './pages/DeckBuilder';
