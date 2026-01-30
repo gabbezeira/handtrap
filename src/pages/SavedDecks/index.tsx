@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Header } from '../../components/Header';
-import { Plus, Trash2, Edit3, Calendar } from 'lucide-react';
+import { Plus, Trash2, Edit3, Calendar, Dices } from 'lucide-react';
 import { getUserDecks, DeckDocument, deleteDeck } from '../../services/deckService';
+import { fetchCardsByIds, CardData } from '../../services/cardDatabase';
+import { HandSimulationModal } from '../../components/HandSimulationModal';
 import { useAuth } from '../../contexts/AuthContext';
 import {
   PageWrapper,
@@ -29,6 +31,8 @@ export const SavedDecks = () => {
     const navigate = useNavigate();
     const [decks, setDecks] = useState<DeckDocument[]>([]);
     const [loading, setLoading] = useState(true);
+    const [simulatingDeck, setSimulatingDeck] = useState<CardData[] | null>(null);
+    const [showHandModal, setShowHandModal] = useState(false);
 
     const loadDecks = async () => {
         if (!user) return;
@@ -52,6 +56,17 @@ export const SavedDecks = () => {
         if (confirm('Tem certeza que deseja excluir este deck?')) {
             await deleteDeck(id);
             loadDecks();
+        }
+    };
+
+    const handleSimulate = async (e: React.MouseEvent, deckIds: number[]) => {
+        e.stopPropagation();
+        try {
+            const cards = await fetchCardsByIds(deckIds);
+            setSimulatingDeck(cards);
+            setShowHandModal(true);
+        } catch (error) {
+            console.error("Failed to load cards for simulation", error);
         }
     };
 
@@ -125,6 +140,9 @@ export const SavedDecks = () => {
                                     <IconButton onClick={(e) => { e.stopPropagation(); navigate(`/builder?id=${deck.id}`); }}>
                                         <Edit3 size={18} />
                                     </IconButton>
+                                    <IconButton onClick={(e) => handleSimulate(e, deck.cards.main)} title="Simular Mão Inicial">
+                                        <Dices size={18} />
+                                    </IconButton>
                                     <IconButton color="var(--error-color)" onClick={(e) => handleDelete(e, deck.id!)}>
                                         <Trash2 size={18} />
                                     </IconButton>
@@ -134,6 +152,11 @@ export const SavedDecks = () => {
                     </DecksGrid>
                 )}
             </Container>
+            <HandSimulationModal 
+                isOpen={showHandModal}
+                onClose={() => setShowHandModal(false)}
+                deck={simulatingDeck || []}
+            />
         </PageWrapper>
     );
 };

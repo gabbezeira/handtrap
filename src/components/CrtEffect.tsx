@@ -35,7 +35,7 @@ const Overlay = styled.div`
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: 9999;
+  z-index: 2147483647; /* Ensure it is absolutely on top of everything */
   pointer-events: none;
   overflow: hidden;
 

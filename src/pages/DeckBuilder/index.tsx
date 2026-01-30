@@ -4,7 +4,8 @@ import { useSearchParams } from 'react-router-dom';
 import { useCardDatabase } from '../../hooks/useCardDatabase';
 import { AiAnalysisPanel } from '../../components/AiAnalysisPanel';
 import { CardData, fetchCardsByIds } from '../../services/cardDatabase';
-import { Search, Sword, Shield, BrainCircuit, Sparkles, X, Info, Box, Loader2, Save } from 'lucide-react';
+import { HandSimulationModal } from '../../components/HandSimulationModal';
+import { Search, Sword, Shield, BrainCircuit, Sparkles, X, Info, Box, Loader2, Save, Dices } from 'lucide-react';
 import { saveDeck, getDeck } from '../../services/deckService';
 import { analyzeDeckWithCache, analyzeCardWithCache, AiDeckResponse } from '../../services/aiAnalysisService';
 import { getCardImageUrl } from '@/utils/imageUrl';
@@ -104,6 +105,7 @@ export const DeckBuilder = () => {
     const [isAiLoading, setIsAiLoading] = useState(false);
     const [aiResult, setAiResult] = useState<{summary: string, usage_moments: string[]} | null>(null);
     const [showAiModal, setShowAiModal] = useState(false);
+    const [showHandModal, setShowHandModal] = useState(false);
     
     // New AI Analysis State
     const [deckAnalysis, setDeckAnalysis] = useState<AiDeckResponse | null>(null);
@@ -533,6 +535,10 @@ export const DeckBuilder = () => {
                                <img src={cpsrIcon} alt="SR CP" style={{width: '20px', height: '20px'}} />
                                <span style={{color: '#cbd5e1', fontWeight: 'bold', fontSize: '0.9rem'}}>{srCost}</span>
                            </div>
+                           <ActionButton $variant="secondary" onClick={() => setShowHandModal(true)}>
+                               <Dices size={16} />
+                               Mão
+                           </ActionButton>
                            <ActionButton $variant="secondary" onClick={() => setShowAI(!showAI)}>
                                <Sparkles size={16} className={showAI ? "text-yellow-400" : ""} />
                                {showAI ? 'IA' : 'IA'}
@@ -659,6 +665,11 @@ export const DeckBuilder = () => {
                     </SearchContainer>
                 </Column>
             </ContentGrid>
+            <HandSimulationModal 
+                isOpen={showHandModal} 
+                onClose={() => setShowHandModal(false)} 
+                deck={mainDeck} 
+            />
         </PageWrapper>
     );
 };
