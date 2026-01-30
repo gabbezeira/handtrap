@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import styled, { keyframes } from 'styled-components';
-import { X, AlertCircle, CheckCircle, Info } from 'lucide-react';
+import { X, AlertCircle, CheckCircle, Info, AlertTriangle } from 'lucide-react';
 
-export type ModalType = 'success' | 'error' | 'info' | 'confirm';
+export type ModalType = 'success' | 'error' | 'info' | 'confirm' | 'warning';
 
 export interface ModalProps {
   isOpen: boolean;
@@ -101,6 +101,7 @@ const Button = styled.button<{ variant?: 'primary' | 'secondary', msgType?: Moda
     background: ${
       props.msgType === 'error' ? '#ff4d4f' : 
       props.msgType === 'success' ? '#52c41a' : 
+      props.msgType === 'warning' ? '#faad14' : 
       '#3b82f6'
     };
     color: white;
@@ -114,6 +115,7 @@ const IconWrapper = styled.span<{ type: ModalType }>`
   color: ${props => 
     props.type === 'error' ? '#ff4d4f' : 
     props.type === 'success' ? '#52c41a' : 
+    props.type === 'warning' ? '#faad14' : 
     '#3b82f6'};
 `;
 
@@ -149,6 +151,7 @@ export const Modal: React.FC<ModalProps> = ({
     switch(type) {
       case 'error': return <AlertCircle size={24} />;
       case 'success': return <CheckCircle size={24} />;
+      case 'warning': return <AlertTriangle size={24} />;
       case 'confirm': return <AlertCircle size={24} />; // Or HelpCircle
       default: return <Info size={24} />;
     }

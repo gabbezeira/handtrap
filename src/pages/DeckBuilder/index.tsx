@@ -140,13 +140,26 @@ export const DeckBuilder = () => {
 
             const result = await analyzeDeckWithCache(cardIds, deckListForAi);
             setDeckAnalysis(result);
-        } catch (error) {
+        } catch (error: any) {
             console.error("AI Analysis Failed", error);
-            showModal({
-                title: 'Erro de Análise',
-                message: 'Falha ao analisar deck. Tente novamente mais tarde.',
-                type: 'error'
-            });
+            
+            // Detect timeout or API issues
+            const isTimeout = error.code === 'ECONNABORTED' || error.message?.includes('timeout');
+            const isServerError = error.response?.status >= 500;
+            
+            if (isTimeout || isServerError) {
+                showModal({
+                    title: '⚠️ Serviço Temporariamente Indisponível',
+                    message: 'A API do Google Gemini está enfrentando instabilidade no momento. Isso é temporário e não é um problema do Handtrap.\n\nTente novamente em alguns minutos ou aguarde a normalização do serviço.',
+                    type: 'warning'
+                });
+            } else {
+                showModal({
+                    title: 'Erro de Análise',
+                    message: 'Falha ao analisar deck. Tente novamente mais tarde.',
+                    type: 'error'
+                });
+            }
         } finally {
             setIsAnalyzing(false);
         }
@@ -159,12 +172,27 @@ export const DeckBuilder = () => {
         try {
             const result = await analyzeCardWithCache(cardName);
             setAiResult(result);
-        } catch (error) {
+        } catch (error: any) {
             console.error(error);
-            setAiResult({
-                summary: "Erro ao analisar carta. Tente novamente.",
-                usage_moments: []
-            });
+            setShowAiModal(false); // Close loading modal
+            
+            // Detect timeout or API issues
+            const isTimeout = error.code === 'ECONNABORTED' || error.message?.includes('timeout');
+            const isServerError = error.response?.status >= 500;
+            
+            if (isTimeout || isServerError) {
+                showModal({
+                    title: '⚠️ Serviço Temporariamente Indisponível',
+                    message: 'A API do Google Gemini está enfrentando instabilidade no momento. Isso é temporário e não é um problema do Handtrap.\n\nTente novamente em alguns minutos ou aguarde a normalização do serviço.',
+                    type: 'warning'
+                });
+            } else {
+                showModal({
+                    title: 'Erro de Análise',
+                    message: 'Não foi possível analisar a carta neste momento. Tente novamente.',
+                    type: 'error'
+                });
+            }
         } finally {
             setIsAiLoading(false);
         }
