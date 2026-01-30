@@ -4,7 +4,8 @@
 > Construa, Analise e Otimize seus decks com o poder da Inteligência Artificial.
 
 Status: 🚀 **Em Desenvolvimento Ativo**  
-🌐 **Sistema Online**: [handtrap.xyz](https://handtrap.xyz)
+🌐 **Sistema Online**: [handtrap.xyz](https://handtrap.xyz)  
+🔗 **Backend API**: [Repositório Backend](https://github.com/gabbezeira/handtrap-api)
 
 ---
 

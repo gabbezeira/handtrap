@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { LogOut, FolderOpen, ChevronDown } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { MusicSettings } from '../MusicSettings';
 import {
   HeaderContainer,
   Logo,
@@ -21,7 +22,6 @@ export const Header = () => {
     const [isOpen, setIsOpen] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
 
-    // Close on click outside
     useEffect(() => {
         const handleClick = (e: MouseEvent) => {
             if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
@@ -47,10 +47,8 @@ export const Header = () => {
                 Hand<span>trap</span>
             </Logo>
 
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-                {/* <ThemeToggleButton onClick={toggleTheme} title="Alternar Tema">
-                    {currentTheme === 'default' ? <Zap size={20} /> : <Moon size={20} />}
-                </ThemeToggleButton> */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <MusicSettings />
 
                 {user && (
                     <UserArea ref={containerRef}>

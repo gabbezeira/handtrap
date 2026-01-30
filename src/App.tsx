@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { CardProvider } from './contexts/CardContext';
 import { ModalProvider } from './contexts/ModalContext';
+import { MusicProvider } from './contexts/MusicContext';
 import { GlobalStyles } from './styles/GlobalStyles';
 import styled from 'styled-components';
 import { CrtEffect } from './components/CrtEffect';
@@ -85,19 +86,21 @@ function App() {
                 <AuthProvider>
                     <CardProvider>
                         <ModalProvider>
-                            <Router>
-                                <MainContent>
-                                    <Routes>
-                                        <Route path="/login" element={<Login />} />
-                                        <Route element={<ProtectedRoute />}>
-                                            <Route path="/decks" element={<SavedDecks />} />
-                                            <Route path="/builder" element={<DeckBuilder />} />
-                                            <Route path="*" element={<Navigate to="/decks" replace />} />
-                                        </Route>
-                                    </Routes>
-                                </MainContent>
-                                <Footer />
-                            </Router>
+                            <MusicProvider>
+                                <Router>
+                                    <MainContent>
+                                        <Routes>
+                                            <Route path="/login" element={<Login />} />
+                                            <Route element={<ProtectedRoute />}>
+                                                <Route path="/decks" element={<SavedDecks />} />
+                                                <Route path="/builder" element={<DeckBuilder />} />
+                                                <Route path="*" element={<Navigate to="/decks" replace />} />
+                                            </Route>
+                                        </Routes>
+                                    </MainContent>
+                                    <Footer />
+                                </Router>
+                            </MusicProvider>
                         </ModalProvider>
                     </CardProvider>
                 </AuthProvider>
