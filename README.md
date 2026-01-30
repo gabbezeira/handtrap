@@ -52,12 +52,25 @@ O backend oferece os seguintes endpoints para análise de decks e cartas:
 
 ### Variáveis de Ambiente (Backend)
 
-Para executar o backend localmente, crie um arquivo `.env` em `/backend` com:
+Para executar o backend localmente, crie um arquivo `.env` em `/backend`:
 
 ```env
+# Firebase Admin SDK (Obrigatório)
+FIREBASE_PROJECT_ID=seu_project_id
+FIREBASE_CLIENT_EMAIL=seu_service_account_email
+FIREBASE_PRIVATE_KEY="sua_private_key_com_quebras_de_linha"
+
+# Gemini API
 GEMINI_API_KEY=sua_chave_primaria
-GEMINI_API_KEY_BACKUP=sua_chave_backup (opcional)
+GEMINI_API_KEY_BACKUP=sua_chave_backup  # Opcional
+
+# Configuração
+PORT=3000
+NODE_ENV=development
 ```
+
+> [!IMPORTANT]
+> **Segurança Implementada**: Os endpoints de análise de IA (`/analyze`, `/analyze-card`) agora requerem **autenticação Firebase**. Usuários não logados receberão erro 401. Rate limiting ativo: 5 análises de deck/min, 10 de cartas/min.
 
 ### Executar Backend
 
