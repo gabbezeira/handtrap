@@ -72,7 +72,12 @@ export const CardProvider = ({ children }: { children: ReactNode }) => {
         for (const card of fullDatabase) {
             if (results.length >= 100) break;
             
-            if (card.name.toLowerCase().includes(lowerQ)) {
+            // Buscar em múltiplos campos: name (PT), name_en (EN) e desc
+            const nameMatch = card.name && card.name.toLowerCase().includes(lowerQ);
+            const nameEnMatch = card.name_en && card.name_en.toLowerCase().includes(lowerQ);
+            const descMatch = card.desc && card.desc.toLowerCase().includes(lowerQ);
+            
+            if (nameMatch || nameEnMatch || descMatch) {
                 results.push(card);
             }
         }
