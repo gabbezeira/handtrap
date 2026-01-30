@@ -3,7 +3,8 @@
 > **O parceiro definitivo para duelistas modernos.**  
 > Construa, Analise e Otimize seus decks com o poder da Inteligência Artificial.
 
-Status: 🚀 **Em Desenvolvimento Ativo**
+Status: 🚀 **Em Desenvolvimento Ativo**  
+🌐 **Sistema Online**: [handtrap.xyz](https://handtrap.xyz)
 
 ---
 
@@ -11,7 +12,7 @@ Status: 🚀 **Em Desenvolvimento Ativo**
 
 **Handtrap** é uma aplicação web moderna desenvolvida para jogadores de Yu-Gi-Oh! (Master Duel / TCG) que buscam elevar seu nível de jogo. Diferente de deck builders tradicionais, o Handtrap integra **AI (Google Gemini)** para oferecer insights táticos, sugestões de combos e análises de fraquezas em tempo real.
 
-O projeto foca em uma experiência de usuário (UX) premium, com design imersivo (Glassmorphism), performance otimizada e ferramentas práticas para o dia a dia do duelista.
+O projeto foca em uma boa experiência de usuário, com performance otimizada e ferramentas práticas para o dia a dia do duelista.
 
 ---
 
@@ -38,7 +39,39 @@ Este projeto foi construído utilizando as melhores práticas e tecnologias do e
 
 ---
 
-## 🚀 Como Executar Localmente
+## � Backend Endpoints
+
+O backend oferece os seguintes endpoints para análise de decks e cartas:
+
+| Endpoint | Método | Descrição |
+|----------|--------|----------|
+| `/` | GET | Status do servidor |
+| `/api/health` | GET | Health check (retorna status e timestamp) |
+| `/analyze` | POST | Análise completa de deck via IA (requer corpo JSON com `deckList`) |
+| `/analyze-card` | POST | Análise individual de carta via IA (requer corpo JSON com `cardName`) |
+
+### Variáveis de Ambiente (Backend)
+
+Para executar o backend localmente, crie um arquivo `.env` em `/backend` com:
+
+```env
+GEMINI_API_KEY=sua_chave_primaria
+GEMINI_API_KEY_BACKUP=sua_chave_backup (opcional)
+```
+
+### Executar Backend
+
+```bash
+cd backend
+npm install
+npm run dev
+```
+
+O backend estará disponível em `http://localhost:3000` (ou porta configurada).
+
+---
+
+## �🚀 Como Executar Localmente
 
 Siga os passos abaixo para contribuir com o projeto:
 
@@ -60,11 +93,14 @@ Siga os passos abaixo para contribuir com o projeto:
    ```
 
 3. **Configure as Variáveis de Ambiente**
-   Crie um arquivo `.env` na raiz do frontend com as credenciais do Firebase e Gemini:
+   Crie um arquivo `.env` na raiz do frontend:
    ```env
    VITE_FIREBASE_API_KEY=sua_key
    VITE_FIREBASE_AUTH_DOMAIN=seu_dominio
-   ...
+   VITE_FIREBASE_PROJECT_ID=seu_project_id
+   VITE_FIREBASE_STORAGE_BUCKET=seu_bucket
+   VITE_FIREBASE_APP_ID=seu_app_id
+   VITE_API_URL=http://localhost:3000
    ```
 
 4. **Execute o servidor de desenvolvimento**
