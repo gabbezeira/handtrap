@@ -27,9 +27,10 @@ export const saveDeck = async (deckData: Omit<DeckDocument, 'createdAt' | 'autho
         }, { merge: true });
         return deckData.id;
     } else {
-        // Create new
+        // Create new - Remove 'id' field to avoid "undefined" error
+        const { id, ...dataWithoutId } = deckData;
         const docRef = await addDoc(collection(db, COLLECTION_NAME), {
-            ...deckData,
+            ...dataWithoutId,
             authorId: deckData.authorId || 'anonymous',
             createdAt: Date.now()
         });
