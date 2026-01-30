@@ -8,6 +8,7 @@ import { CrtEffect } from './components/CrtEffect';
 import { MobileBlocker } from './components/MobileBlocker';
 import { DebugProvider } from './contexts/DebugContext';
 import { ThemeProvider } from './contexts/ThemeContext';
+import { Analytics } from "@vercel/analytics/next"
 
 // Pages
 import { DeckBuilder } from './pages/DeckBuilder';
@@ -64,6 +65,7 @@ function App() {
 
   return (
     <AppContainer>
+        <Analytics/>
         <DebugProvider>
             <ThemeProvider>
                 <CrtEffect />
