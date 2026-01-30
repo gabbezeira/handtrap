@@ -3,7 +3,8 @@ import styled from 'styled-components';
 export const PageWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: 100%;
+  overflow-y: auto;
   background: radial-gradient(circle at center, #020617 0%, #050510 100%);
 `;
 

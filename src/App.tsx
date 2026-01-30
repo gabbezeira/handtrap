@@ -10,14 +10,26 @@ import { DebugProvider } from './contexts/DebugContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { Analytics } from "@vercel/analytics/react"
 
-// Pages
 import { DeckBuilder } from './pages/DeckBuilder';
 import { Login } from './pages/Login';
 
 import { SavedDecks } from './pages/SavedDecks';
 
+import { Footer } from './components/Footer';
+
 const AppContainer = styled.div`
-  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+`;
+
+const MainContent = styled.div`
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
 `;
 
 const ProtectedRoute = () => {
@@ -35,14 +47,12 @@ const ProtectedRoute = () => {
 import { useState, useEffect } from 'react';
 import { AdminDashboard } from './components/AdminDashboard';
 
-// ...
 
 function App() {
   const [showAdmin, setShowAdmin] = useState(false);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Ctrl + Shift + D
       if (e.ctrlKey && e.shiftKey && e.key === 'D') {
         setShowAdmin(prev => !prev);
       }
@@ -76,14 +86,17 @@ function App() {
                     <CardProvider>
                         <ModalProvider>
                             <Router>
-                            <Routes>
-                                <Route path="/login" element={<Login />} />
-                                <Route element={<ProtectedRoute />}>
-                                    <Route path="/decks" element={<SavedDecks />} />
-                                    <Route path="/builder" element={<DeckBuilder />} />
-                                    <Route path="*" element={<Navigate to="/decks" replace />} />
-                                </Route>
-                            </Routes>
+                                <MainContent>
+                                    <Routes>
+                                        <Route path="/login" element={<Login />} />
+                                        <Route element={<ProtectedRoute />}>
+                                            <Route path="/decks" element={<SavedDecks />} />
+                                            <Route path="/builder" element={<DeckBuilder />} />
+                                            <Route path="*" element={<Navigate to="/decks" replace />} />
+                                        </Route>
+                                    </Routes>
+                                </MainContent>
+                                <Footer />
                             </Router>
                         </ModalProvider>
                     </CardProvider>

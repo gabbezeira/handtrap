@@ -66,7 +66,7 @@ export const SupportButton = () => {
             
             <Title>Apoie o Projeto 💖</Title>
             <Subtitle>
-              Ajude a manter o Master Duel Coach online e recebendo atualizações com qualquer valor!
+              Ajude a manter o Handtrap Xyz online e recebendo atualizações com qualquer valor!
             </Subtitle>
 
             <QrPlaceholder>

@@ -2,7 +2,6 @@ import axios from 'axios';
 import { getDB } from './db';
 import { metricsManager } from './metrics';
 
-// Local path to the public JSON file
 const DB_URL = '/cardDatabase.json';
 
 export interface CardData {

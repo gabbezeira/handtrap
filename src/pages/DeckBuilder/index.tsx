@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useSearchParams } from 'react-router-dom';
-import { useCardDatabase } from '../../hooks/useCardDatabase';
+import { useCardDatabase } from '../../contexts/CardContext';
 import { AiAnalysisPanel } from '../../components/AiAnalysisPanel';
 import { CardData, fetchCardsByIds } from '../../services/cardDatabase';
 import { HandSimulationModal } from '../../components/HandSimulationModal';
