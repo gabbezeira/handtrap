@@ -5,3 +5,5 @@ build/
 .DS_Store
 public/card_images/
 card_images/
+card_images_small/
+public/card_images_small/
