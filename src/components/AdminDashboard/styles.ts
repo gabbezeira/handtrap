@@ -10,15 +10,15 @@ export const DashboardContainer = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: var(--bg-secondary);
+  background: rgba(15, 23, 42, 0.95);
   backdrop-filter: blur(12px);
-  border: 1px solid var(--border-color);
-  border-radius: 16px;
-  width: 700px;
-  max-width: 95vw;
+  border: 1px solid rgba(62, 147, 252, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  width: auto;
+  min-width: 500px;
   padding: 2.5rem;
   z-index: 9999;
-  box-shadow: 0 20px 50px -12px rgba(0, 0, 0, 0.5);
   font-family: var(--font-body);
   color: #e2e8f0;
   animation: ${fadeIn} 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -66,18 +66,19 @@ export const CloseButton = styled.button`
 `;
 
 export const StatsGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-direction: row;
   gap: 24px;
   
   @media (max-width: 600px) {
-    grid-template-columns: 1fr;
+    flex-direction: column;
   }
 `;
 
 export const StatCard = styled.div<{ $type: 'system' | 'external' | 'cost' }>`
   background: linear-gradient(145deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
-  padding: 1.5rem;
+  padding: 1rem 2rem;
+  min-width: 15rem;
   border-radius: 12px;
   border: 1px solid ${(props) => {
     if (props.$type === 'system') return 'rgba(59, 130, 246, 0.3)';
