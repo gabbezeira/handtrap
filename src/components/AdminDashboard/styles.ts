@@ -79,7 +79,7 @@ export const StatCard = styled.div<{ $type: 'system' | 'external' | 'cost' }>`
   background: linear-gradient(145deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
   padding: 1.5rem;
   border-radius: 12px;
-  border: 1px solid ${props => {
+  border: 1px solid ${(props) => {
     if (props.$type === 'system') return 'rgba(59, 130, 246, 0.3)';
     if (props.$type === 'cost') return 'rgba(16, 185, 129, 0.3)';
     return 'rgba(236, 72, 153, 0.3)';
@@ -94,7 +94,7 @@ export const StatCard = styled.div<{ $type: 'system' | 'external' | 'cost' }>`
     left: 0;
     width: 100%;
     height: 4px;
-    background: ${props => {
+    background: ${(props) => {
       if (props.$type === 'system') return '#3b82f6';
       if (props.$type === 'cost') return '#10b981';
       return '#ec4899';
@@ -135,9 +135,9 @@ export const OperationLabel = styled.span`
 `;
 
 export const MetricValue = styled.strong<{ $color?: string; $small?: boolean }>`
-  color: ${props => props.$color || 'var(--text-primary)'};
+  color: ${(props) => props.$color || 'var(--text-primary)'};
   font-family: monospace;
-  font-size: ${props => props.$small ? '0.8rem' : '1rem'};
+  font-size: ${(props) => (props.$small ? '0.8rem' : '1rem')};
 `;
 
 export const LoginOverlay = styled.div`
@@ -176,21 +176,21 @@ export const PasswordInput = styled.input`
 `;
 
 export const ActionButton = styled.button<{ $variant?: 'primary' | 'secondary' }>`
-  background: ${props => props.$variant === 'primary' ? 'var(--primary-color)' : 'transparent'};
-  border: ${props => props.$variant === 'primary' ? 'none' : '1px solid var(--border-color)'};
-  color: ${props => props.$variant === 'primary' ? 'white' : 'var(--text-secondary)'};
+  background: ${(props) => (props.$variant === 'primary' ? 'var(--primary-color)' : 'transparent')};
+  border: ${(props) => (props.$variant === 'primary' ? 'none' : '1px solid var(--border-color)')};
+  color: ${(props) => (props.$variant === 'primary' ? 'white' : 'var(--text-secondary)')};
   padding: 10px 24px;
   border-radius: 8px;
   cursor: pointer;
   font-weight: 500;
   font-size: 0.95rem;
   transition: all 0.2s;
-  width: ${props => props.$variant === 'primary' ? '100%' : 'auto'};
+  width: ${(props) => (props.$variant === 'primary' ? '100%' : 'auto')};
   max-width: 280px;
 
   &:hover {
     filter: brightness(1.1);
-    background: ${props => props.$variant === 'primary' ? 'var(--accent-color)' : 'var(--input-bg)'};
+    background: ${(props) => (props.$variant === 'primary' ? 'var(--accent-color)' : 'var(--input-bg)')};
     color: var(--text-primary);
   }
 

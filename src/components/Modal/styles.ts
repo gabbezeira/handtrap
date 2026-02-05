@@ -70,7 +70,7 @@ export const Footer = styled.div`
   gap: 12px;
 `;
 
-export const Button = styled.button<{ variant?: 'primary' | 'secondary', $msgType?: ModalType }>`
+export const Button = styled.button<{ variant?: 'primary' | 'secondary'; $msgType?: ModalType }>`
   padding: 8px 16px;
   border-radius: 6px;
   font-weight: 600;
@@ -79,16 +79,22 @@ export const Button = styled.button<{ variant?: 'primary' | 'secondary', $msgTyp
   border: none;
   font-size: 0.9rem;
 
-  ${props => props.variant === 'secondary' ? `
+  ${(props) =>
+    props.variant === 'secondary'
+      ? `
     background: transparent;
     color: #9ca3af;
     &:hover { background: rgba(255,255,255,0.1); color: #fff; }
-  ` : `
+  `
+      : `
     background: ${
-      props.$msgType === 'error' ? '#ff4d4f' : 
-      props.$msgType === 'success' ? '#52c41a' : 
-      props.$msgType === 'warning' ? '#faad14' : 
-      '#3b82f6'
+      props.$msgType === 'error'
+        ? '#ff4d4f'
+        : props.$msgType === 'success'
+          ? '#52c41a'
+          : props.$msgType === 'warning'
+            ? '#faad14'
+            : '#3b82f6'
     };
     color: white;
     &:hover { filter: brightness(1.1); }
@@ -98,11 +104,14 @@ export const Button = styled.button<{ variant?: 'primary' | 'secondary', $msgTyp
 export const IconWrapper = styled.span<{ $type: ModalType }>`
   display: flex;
   align-items: center;
-  color: ${props => 
-    props.$type === 'error' ? '#ff4d4f' : 
-    props.$type === 'success' ? '#52c41a' : 
-    props.$type === 'warning' ? '#faad14' : 
-    '#3b82f6'};
+  color: ${(props) =>
+    props.$type === 'error'
+      ? '#ff4d4f'
+      : props.$type === 'success'
+        ? '#52c41a'
+        : props.$type === 'warning'
+          ? '#faad14'
+          : '#3b82f6'};
 `;
 
 export const CloseButton = styled.button`

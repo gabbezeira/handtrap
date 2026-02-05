@@ -63,7 +63,7 @@ export const MusicProvider = ({ children }: { children: ReactNode }) => {
     if (isPlaying && playlist.length > 0) {
       const trackIndex = playlist[currentTrack % playlist.length];
       audio.src = MUSIC_FILES[trackIndex];
-      audio.play().catch(err => console.warn('Audio play failed:', err));
+      audio.play().catch((err) => console.warn('Audio play failed:', err));
     } else {
       audio.pause();
     }
@@ -71,7 +71,7 @@ export const MusicProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const handleEnded = () => {
-      setCurrentTrack(prev => prev + 1);
+      setCurrentTrack((prev) => prev + 1);
     };
 
     audio.addEventListener('ended', handleEnded);
@@ -83,11 +83,11 @@ export const MusicProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const toggleMute = useCallback(() => {
-    setIsMuted(prev => !prev);
+    setIsMuted((prev) => !prev);
   }, []);
 
   const togglePlay = useCallback(() => {
-    setIsPlaying(prev => !prev);
+    setIsPlaying((prev) => !prev);
   }, []);
 
   return (
@@ -99,7 +99,7 @@ export const MusicProvider = ({ children }: { children: ReactNode }) => {
         currentTrack,
         setVolume,
         toggleMute,
-        togglePlay
+        togglePlay,
       }}
     >
       {children}

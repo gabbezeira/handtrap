@@ -44,9 +44,11 @@ export const PlanColumn = styled.div<{ $isPremium?: boolean }>`
   flex-direction: column;
   background: var(--bg-color);
   position: relative;
-  border-right: ${props => !props.$isPremium ? '1px solid var(--border-color)' : 'none'};
+  border-right: ${(props) => (!props.$isPremium ? '1px solid var(--border-color)' : 'none')};
 
-  ${props => props.$isPremium && `
+  ${(props) =>
+    props.$isPremium &&
+    `
     &::before {
       content: 'RECOMENDADO';
       position: absolute;
@@ -63,7 +65,7 @@ export const PlanColumn = styled.div<{ $isPremium?: boolean }>`
 
   @media (max-width: 767px) {
     border-right: none;
-    border-bottom: ${props => !props.$isPremium ? '1px solid var(--border-color)' : 'none'};
+    border-bottom: ${(props) => (!props.$isPremium ? '1px solid var(--border-color)' : 'none')};
     padding: 1.5rem;
   }
 `;
@@ -77,7 +79,7 @@ export const PlanTitle = styled.h3`
   font-size: 1.5rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
-  color: ${props => props.color || '#fff'};
+  color: ${(props) => props.color || '#fff'};
 `;
 
 export const PlanPrice = styled.div`

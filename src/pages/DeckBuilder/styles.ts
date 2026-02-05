@@ -162,7 +162,7 @@ export const CardBackdrop = styled.div<{ $bgImage?: string }>`
   left: 0;
   right: 0;
   height: 400px;
-  background-image: url(${props => props.$bgImage});
+  background-image: url(${(props) => props.$bgImage});
   background-size: cover;
   background-position: center top;
   opacity: 0.15;
@@ -234,7 +234,7 @@ export const TagsContainer = styled.div`
 `;
 
 export const Tag = styled.span<{ $color?: string }>`
-  background: ${props => props.$color || 'var(--border-color)'};
+  background: ${(props) => props.$color || 'var(--border-color)'};
   padding: 4px 8px;
   border-radius: 6px;
   font-size: 0.75rem;
@@ -263,12 +263,16 @@ export const RarityBadge = styled.div<{ $rarity: 'UR' | 'SR' | 'R' | 'N' }>`
   text-shadow: 0 1px 2px rgba(0,0,0,0.5);
   letter-spacing: 0.05em;
   box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-  background: ${props => {
-    switch(props.$rarity) {
-      case 'UR': return 'linear-gradient(135deg, #bf2aeb 0%, #3bf2fa 100%)';
-      case 'SR': return 'linear-gradient(135deg, #f97316 0%, #eab308 100%)';
-      case 'R':  return 'linear-gradient(135deg, #2563eb 0%, #60a5fa 100%)';
-      default:   return 'linear-gradient(135deg, #334155 0%, #94a3b8 100%)';
+  background: ${(props) => {
+    switch (props.$rarity) {
+      case 'UR':
+        return 'linear-gradient(135deg, #bf2aeb 0%, #3bf2fa 100%)';
+      case 'SR':
+        return 'linear-gradient(135deg, #f97316 0%, #eab308 100%)';
+      case 'R':
+        return 'linear-gradient(135deg, #2563eb 0%, #60a5fa 100%)';
+      default:
+        return 'linear-gradient(135deg, #334155 0%, #94a3b8 100%)';
     }
   }};
   border: none;
@@ -412,7 +416,7 @@ export const StatBox = styled.div<{ $statType?: 'atk' | 'def' }>`
     left: 0; 
     width: 100%; 
     height: 3px;
-    background: ${props => props.$statType === 'atk' ? '#ef4444' : '#3b82f6'};
+    background: ${(props) => (props.$statType === 'atk' ? '#ef4444' : '#3b82f6')};
     opacity: 0.8;
   }
 `;
@@ -505,7 +509,7 @@ export const SectionLabel = styled.h3`
 `;
 
 export const DeckCount = styled.span<{ $isComplete?: boolean }>`
-  color: ${props => props.$isComplete ? 'var(--primary-color)' : 'var(--text-secondary)'};
+  color: ${(props) => (props.$isComplete ? 'var(--primary-color)' : 'var(--text-secondary)')};
 `;
 
 export const CardGrid = styled.div`
@@ -624,8 +628,6 @@ export const SearchRowInner = styled.div`
   width: 100%;
 `;
 
-
-
 export const CatalogGrid = styled.div`
   flex: 1;
   overflow-y: auto;
@@ -653,10 +655,9 @@ export const CatalogGrid = styled.div`
 `;
 
 export const ActionButton = styled.button<{ $variant?: 'primary' | 'secondary' }>`
-  background: ${props => props.$variant === 'primary' 
-    ? 'var(--primary-color)' 
-    : 'rgba(255,255,255,0.1)'};
-  border: 1px solid ${props => props.$variant === 'primary' ? 'transparent' : 'rgba(255,255,255,0.1)'};
+  background: ${(props) =>
+    props.$variant === 'primary' ? 'var(--primary-color)' : 'rgba(255,255,255,0.1)'};
+  border: 1px solid ${(props) => (props.$variant === 'primary' ? 'transparent' : 'rgba(255,255,255,0.1)')};
   color: var(--text-primary);
   padding: 0.5rem 0.8rem;
   border-radius: 8px;
@@ -669,9 +670,8 @@ export const ActionButton = styled.button<{ $variant?: 'primary' | 'secondary' }
   font-size: 0.9rem;
   
   &:hover {
-    background: ${props => props.$variant === 'primary' 
-      ? 'var(--accent-color)' 
-      : 'rgba(255,255,255,0.15)'};
+    background: ${(props) =>
+      props.$variant === 'primary' ? 'var(--accent-color)' : 'rgba(255,255,255,0.15)'};
     transform: translateY(-2px);
     box-shadow: none;
   }
@@ -1033,4 +1033,3 @@ export const MobileAddButton = styled.button`
     transform: scale(0.98);
   }
 `;
-

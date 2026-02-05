@@ -180,8 +180,8 @@ export const MenuButton = styled.button<{ $locked?: boolean }>`
   overflow: hidden;
   
   &:hover {
-    background: ${({ $locked }) => $locked ? 'rgba(255, 255, 255, 0.03)' : 'rgba(255, 255, 255, 0.06)'};
-    border-color: ${({ $locked }) => $locked ? 'rgba(255, 255, 255, 0.08)' : 'rgba(168, 85, 247, 0.3)'};
+    background: ${({ $locked }) => ($locked ? 'rgba(255, 255, 255, 0.03)' : 'rgba(255, 255, 255, 0.06)')};
+    border-color: ${({ $locked }) => ($locked ? 'rgba(255, 255, 255, 0.08)' : 'rgba(168, 85, 247, 0.3)')};
   }
   
   svg:last-child {
@@ -257,14 +257,12 @@ export const PlanBadge = styled.div<{ $premium: boolean }>`
   font-size: 0.85rem;
   font-weight: 600;
   
-  background: ${({ $premium }) => 
-    $premium 
-      ? 'linear-gradient(135deg, #6366f1, #a855f7)' 
-      : 'rgba(255, 255, 255, 0.1)'};
-  color: ${({ $premium }) => $premium ? '#fff' : '#888'};
+  background: ${({ $premium }) =>
+    $premium ? 'linear-gradient(135deg, #6366f1, #a855f7)' : 'rgba(255, 255, 255, 0.1)'};
+  color: ${({ $premium }) => ($premium ? '#fff' : '#888')};
   
   svg {
-    color: ${({ $premium }) => $premium ? '#fff' : '#666'};
+    color: ${({ $premium }) => ($premium ? '#fff' : '#666')};
   }
 `;
 
@@ -276,17 +274,23 @@ export const StatusBadge = styled.span<{ $status: 'active' | 'canceled' | 'past_
   
   background: ${({ $status }) => {
     switch ($status) {
-      case 'active': return 'rgba(34, 197, 94, 0.15)';
-      case 'canceled': return 'rgba(239, 68, 68, 0.15)';
-      default: return 'rgba(234, 179, 8, 0.15)';
+      case 'active':
+        return 'rgba(34, 197, 94, 0.15)';
+      case 'canceled':
+        return 'rgba(239, 68, 68, 0.15)';
+      default:
+        return 'rgba(234, 179, 8, 0.15)';
     }
   }};
   
   color: ${({ $status }) => {
     switch ($status) {
-      case 'active': return '#22c55e';
-      case 'canceled': return '#ef4444';
-      default: return '#eab308';
+      case 'active':
+        return '#22c55e';
+      case 'canceled':
+        return '#ef4444';
+      default:
+        return '#eab308';
     }
   }};
 `;
@@ -322,17 +326,12 @@ export const ActionButton = styled.button<{ $primary?: boolean }>`
   cursor: pointer;
   transition: all 0.2s;
   
-  background: ${({ $primary }) => 
-    $primary 
-      ? 'linear-gradient(135deg, #6366f1, #a855f7)' 
-      : 'rgba(255, 255, 255, 0.05)'};
+  background: ${({ $primary }) =>
+    $primary ? 'linear-gradient(135deg, #6366f1, #a855f7)' : 'rgba(255, 255, 255, 0.05)'};
   
-  border: ${({ $primary }) => 
-    $primary 
-      ? 'none' 
-      : '1px solid rgba(255, 255, 255, 0.1)'};
+  border: ${({ $primary }) => ($primary ? 'none' : '1px solid rgba(255, 255, 255, 0.1)')};
   
-  color: ${({ $primary }) => $primary ? '#fff' : '#ccc'};
+  color: ${({ $primary }) => ($primary ? '#fff' : '#ccc')};
   
   &:hover:not(:disabled) {
     opacity: 0.9;

@@ -22,7 +22,7 @@ export const ModalProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   const [modalOptions, setModalOptions] = useState<ModalOptions>({
     title: '',
     message: '',
-    type: 'info'
+    type: 'info',
   });
 
   const showModal = (options: ModalOptions) => {
@@ -37,11 +37,7 @@ export const ModalProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   return (
     <ModalContext.Provider value={{ showModal, closeModal }}>
       {children}
-      <Modal
-        isOpen={isOpen}
-        onClose={closeModal}
-        {...modalOptions}
-      />
+      <Modal isOpen={isOpen} onClose={closeModal} {...modalOptions} />
     </ModalContext.Provider>
   );
 };

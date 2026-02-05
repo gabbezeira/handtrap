@@ -5,7 +5,7 @@ interface YugiohDB extends DBSchema {
   cards: {
     key: number;
     value: CardData;
-    indexes: { 'name': string };
+    indexes: { name: string };
   };
   settings: {
     key: string;
@@ -27,7 +27,7 @@ export const getDB = () => {
           store.createIndex('name', 'name', { unique: false });
         }
         if (!db.objectStoreNames.contains('settings')) {
-            db.createObjectStore('settings');
+          db.createObjectStore('settings');
         }
       },
     });
@@ -36,11 +36,11 @@ export const getDB = () => {
 };
 
 export const getSetting = async (key: string) => {
-    const db = await getDB();
-    return db.get('settings', key);
+  const db = await getDB();
+  return db.get('settings', key);
 };
 
 export const saveSetting = async (key: string, value: any) => {
-    const db = await getDB();
-    return db.put('settings', value, key);
+  const db = await getDB();
+  return db.put('settings', value, key);
 };

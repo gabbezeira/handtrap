@@ -112,6 +112,6 @@ export const Dot = styled.div<{ $active: boolean }>`
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: ${props => props.$active ? '#a855f7' : 'rgba(168, 85, 247, 0.3)'};
+  background: ${(props) => (props.$active ? '#a855f7' : 'rgba(168, 85, 247, 0.3)')};
   transition: background 0.3s ease;
 `;

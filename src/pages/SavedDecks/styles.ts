@@ -205,7 +205,7 @@ export const DeckActions = styled.div`
 export const IconButton = styled.button<{ color?: string }>`
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  color: ${props => props.color || 'white'};
+  color: ${(props) => props.color || 'white'};
   padding: 0.5rem;
   border-radius: 8px;
   cursor: pointer;
@@ -302,11 +302,11 @@ export const ImportInput = styled.input`
 `;
 
 export const ImportButton = styled.button`
-  background: ${props => props.disabled ? '#334155' : 'var(--primary-color)'};
-  color: ${props => props.disabled ? '#94a3b8' : 'white'};
+  background: ${(props) => (props.disabled ? '#334155' : 'var(--primary-color)')};
+  color: ${(props) => (props.disabled ? '#94a3b8' : 'white')};
   border: none;
   padding: 0 1.2rem;
-  cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
+  cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
   font-weight: 600;
   display: flex;
   align-items: center;

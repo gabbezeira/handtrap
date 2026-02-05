@@ -15,8 +15,15 @@ export interface ModalProps {
   cancelText?: string;
 }
 
-export const Modal: React.FC<ModalProps> = ({ 
-  isOpen, onClose, title, message, type = 'info', onConfirm, confirmText = 'OK', cancelText = 'Cancelar' 
+export const Modal: React.FC<ModalProps> = ({
+  isOpen,
+  onClose,
+  title,
+  message,
+  type = 'info',
+  onConfirm,
+  confirmText = 'OK',
+  cancelText = 'Cancelar',
 }) => {
   const overlayRef = useRef<HTMLDivElement>(null);
 
@@ -35,12 +42,17 @@ export const Modal: React.FC<ModalProps> = ({
   };
 
   const getIcon = () => {
-    switch(type) {
-      case 'error': return <AlertCircle size={24} />;
-      case 'success': return <CheckCircle size={24} />;
-      case 'warning': return <AlertTriangle size={24} />;
-      case 'confirm': return <AlertCircle size={24} />; // Or HelpCircle
-      default: return <Info size={24} />;
+    switch (type) {
+      case 'error':
+        return <AlertCircle size={24} />;
+      case 'success':
+        return <CheckCircle size={24} />;
+      case 'warning':
+        return <AlertTriangle size={24} />;
+      case 'confirm':
+        return <AlertCircle size={24} />; // Or HelpCircle
+      default:
+        return <Info size={24} />;
     }
   };
 
@@ -52,7 +64,9 @@ export const Modal: React.FC<ModalProps> = ({
             <S.IconWrapper $type={type}>{getIcon()}</S.IconWrapper>
             {title}
           </h3>
-          <S.CloseButton onClick={onClose}><X size={20} /></S.CloseButton>
+          <S.CloseButton onClick={onClose}>
+            <X size={20} />
+          </S.CloseButton>
         </S.Header>
         <S.Body>{message}</S.Body>
         <S.Footer>
@@ -61,8 +75,8 @@ export const Modal: React.FC<ModalProps> = ({
               {cancelText}
             </S.Button>
           )}
-          <S.Button 
-            $msgType={type} 
+          <S.Button
+            $msgType={type}
             onClick={() => {
               if (onConfirm) onConfirm();
               onClose();

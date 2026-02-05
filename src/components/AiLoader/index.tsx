@@ -22,18 +22,16 @@ interface AiLoaderProps {
   message?: string;
 }
 
-export const AiLoader: React.FC<AiLoaderProps> = ({ 
-  message = 'Analisando com IA...' 
-}) => {
+export const AiLoader: React.FC<AiLoaderProps> = ({ message = 'Analisando com IA...' }) => {
   const [currentTipIndex, setCurrentTipIndex] = useState(0);
 
   useEffect(() => {
     // Start with a random tip
     setCurrentTipIndex(Math.floor(Math.random() * TIPS.length));
-    
+
     // Rotate tips every 4 seconds
     const interval = setInterval(() => {
-      setCurrentTipIndex(prev => (prev + 1) % TIPS.length);
+      setCurrentTipIndex((prev) => (prev + 1) % TIPS.length);
     }, 4000);
 
     return () => clearInterval(interval);
@@ -64,10 +62,7 @@ export const AiLoader: React.FC<AiLoaderProps> = ({
 
       <S.DotsContainer>
         {[0, 1, 2].map((i) => (
-          <S.Dot 
-            key={i} 
-            $active={Math.floor(currentTipIndex / 4) % 3 === i} 
-          />
+          <S.Dot key={i} $active={Math.floor(currentTipIndex / 4) % 3 === i} />
         ))}
       </S.DotsContainer>
     </S.LoaderContainer>

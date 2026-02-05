@@ -37,7 +37,7 @@ export const SettingsDropdown = styled.div<{ $isOpen: boolean }>`
   min-width: 220px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(10px);
-  display: ${props => props.$isOpen ? 'block' : 'none'};
+  display: ${(props) => (props.$isOpen ? 'block' : 'none')};
   z-index: 1000;
 `;
 

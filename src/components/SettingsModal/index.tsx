@@ -1,6 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { Settings, X, Volume2, VolumeX, Cpu, Crown, ChevronRight, ExternalLink, Loader2, Calendar, CreditCard, Lock } from 'lucide-react';
+import {
+  Settings,
+  X,
+  Volume2,
+  VolumeX,
+  Cpu,
+  Crown,
+  ChevronRight,
+  ExternalLink,
+  Loader2,
+  Calendar,
+  CreditCard,
+  Lock,
+} from 'lucide-react';
 import {
   Overlay,
   Modal,
@@ -28,7 +41,7 @@ import {
   CloseActionButton,
   LockedOverlay,
   LockedContent,
-  PremiumTag
+  PremiumTag,
 } from './styles';
 import { useMusic } from '../../contexts/MusicContext';
 import { useAuth } from '../../contexts/AuthContext';
@@ -60,7 +73,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
     plan: 'free',
     status: null,
     startDate: null,
-    stripeCustomerId: null
+    stripeCustomerId: null,
   });
   const [loadingPortal, setLoadingPortal] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
@@ -84,7 +97,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
           plan: sub.plan || 'free',
           status: sub.status || null,
           startDate: sub.startDate?.toDate() || null,
-          stripeCustomerId: sub.stripeCustomerId || null
+          stripeCustomerId: sub.stripeCustomerId || null,
         });
       }
     });
@@ -94,7 +107,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
 
   const handleManageSubscription = async () => {
     if (!subscription.stripeCustomerId) return;
-    
+
     setLoadingPortal(true);
     try {
       const response = await api.post('/billing-portal');
@@ -113,7 +126,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
     return new Intl.DateTimeFormat('pt-BR', {
       day: '2-digit',
       month: 'long',
-      year: 'numeric'
+      year: 'numeric',
     }).format(date);
   };
 
@@ -122,7 +135,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
   return createPortal(
     <>
       <Overlay onClick={onClose}>
-        <Modal onClick={e => e.stopPropagation()}>
+        <Modal onClick={(e) => e.stopPropagation()}>
           <Header>
             <Title>
               <Settings size={22} />
@@ -137,7 +150,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
             {/* Audio Section */}
             <MenuSection>
               <MenuSectionTitle>🔊 Áudio</MenuSectionTitle>
-              
+
               <MenuRow>
                 <MenuRowContent>
                   <MenuRowTitle>
@@ -172,9 +185,11 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
             {/* API Section */}
             <MenuSection>
               <MenuSectionTitle>🤖 Inteligência Artificial</MenuSectionTitle>
-              
-              <MenuButton 
-                onClick={() => isPremium ? setShowCustomApiModal(true) : setShowUpgradeModal(true)}
+
+              <MenuButton
+                onClick={() =>
+                  isPremium ? setShowCustomApiModal(true) : setShowUpgradeModal(true)
+                }
                 $locked={!isPremium}
               >
                 <MenuRowContent>
@@ -183,10 +198,11 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
                     API Personalizada
                   </MenuRowTitle>
                   <MenuRowDescription>
-                    {isPremium 
-                      ? (customApiEnabled ? 'Ativada' : 'Use sua própria API key')
-                      : 'Recurso exclusivo Premium'
-                    }
+                    {isPremium
+                      ? customApiEnabled
+                        ? 'Ativada'
+                        : 'Use sua própria API key'
+                      : 'Recurso exclusivo Premium'}
                   </MenuRowDescription>
                 </MenuRowContent>
                 {isPremium ? (
@@ -197,7 +213,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
                     Premium
                   </PremiumTag>
                 )}
-                
+
                 {!isPremium && (
                   <LockedOverlay>
                     <LockedContent>
@@ -212,18 +228,21 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
             {/* Subscription Section */}
             <MenuSection>
               <MenuSectionTitle>💎 Sua Assinatura</MenuSectionTitle>
-              
+
               <SubscriptionCard>
                 <SubscriptionInfo>
                   <PlanBadge $premium={subscription.plan === 'premium'}>
                     <Crown size={14} />
                     {subscription.plan === 'premium' ? 'Premium' : 'Gratuito'}
                   </PlanBadge>
-                  
+
                   {subscription.status && (
                     <StatusBadge $status={subscription.status}>
-                      {subscription.status === 'active' ? 'Ativo' : 
-                       subscription.status === 'canceled' ? 'Cancelado' : 'Pendente'}
+                      {subscription.status === 'active'
+                        ? 'Ativo'
+                        : subscription.status === 'canceled'
+                          ? 'Cancelado'
+                          : 'Pendente'}
                     </StatusBadge>
                   )}
                 </SubscriptionInfo>
@@ -237,7 +256,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
 
                 <SubscriptionActions>
                   {subscription.plan === 'premium' ? (
-                    <ActionButton 
+                    <ActionButton
                       onClick={handleManageSubscription}
                       disabled={loadingPortal || !subscription.stripeCustomerId}
                     >
@@ -250,8 +269,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
                       <ExternalLink size={12} />
                     </ActionButton>
                   ) : (
-                    <ActionButton 
-                      $primary 
+                    <ActionButton
+                      $primary
                       onClick={() => {
                         onClose();
                         // Trigger upgrade modal - this would be better with a context/event
@@ -268,23 +287,15 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
           </Body>
 
           <Footer>
-            <CloseActionButton onClick={onClose}>
-              Fechar
-            </CloseActionButton>
+            <CloseActionButton onClick={onClose}>Fechar</CloseActionButton>
           </Footer>
         </Modal>
       </Overlay>
 
-      <CustomApiModal 
-        isOpen={showCustomApiModal} 
-        onClose={() => setShowCustomApiModal(false)} 
-      />
-      
-      <UpgradeModal 
-        isOpen={showUpgradeModal} 
-        onClose={() => setShowUpgradeModal(false)} 
-      />
+      <CustomApiModal isOpen={showCustomApiModal} onClose={() => setShowCustomApiModal(false)} />
+
+      <UpgradeModal isOpen={showUpgradeModal} onClose={() => setShowUpgradeModal(false)} />
     </>,
-    document.body
+    document.body,
   );
 };

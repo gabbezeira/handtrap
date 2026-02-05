@@ -7,3 +7,7 @@ public/card_images/
 card_images/
 card_images_small/
 public/card_images_small/
+
+# Testing
+coverage/
+junit.xml

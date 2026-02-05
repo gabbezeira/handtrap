@@ -72,12 +72,12 @@ export const HeaderCredits = styled.div<{ $isLimitReached?: boolean }>`
   display: flex;
   align-items: center;
   gap: 10px;
-  background: ${props => props.$isLimitReached 
-    ? 'rgba(239, 68, 68, 0.15)' 
-    : 'linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(168, 85, 247, 0.2) 100%)'};
-  border: 1px solid ${props => props.$isLimitReached 
-    ? 'rgba(239, 68, 68, 0.4)' 
-    : 'rgba(168, 85, 247, 0.4)'};
+  background: ${(props) =>
+    props.$isLimitReached
+      ? 'rgba(239, 68, 68, 0.15)'
+      : 'linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(168, 85, 247, 0.2) 100%)'};
+  border: 1px solid ${(props) =>
+    props.$isLimitReached ? 'rgba(239, 68, 68, 0.4)' : 'rgba(168, 85, 247, 0.4)'};
   border-radius: 10px;
   padding: 8px 14px;
 `;
@@ -100,7 +100,7 @@ export const CreditsInfo = styled.div`
 export const CreditsCount = styled.span<{ $isLimitReached?: boolean }>`
   font-size: 1rem;
   font-weight: 700;
-  color: ${props => props.$isLimitReached ? '#ef4444' : '#a855f7'};
+  color: ${(props) => (props.$isLimitReached ? '#ef4444' : '#a855f7')};
   font-family: var(--font-heading);
 `;
 
@@ -169,7 +169,7 @@ export const UsageText = styled.div`
 
 export const UsageCredits = styled.div<{ $isLimitReached: boolean }>`
   margin-top: 4px;
-  color: ${props => props.$isLimitReached ? '#ef4444' : '#22c55e'};
+  color: ${(props) => (props.$isLimitReached ? '#ef4444' : '#22c55e')};
   font-weight: bold;
 `;
 
@@ -237,7 +237,6 @@ export const CustomApiBannerSubtitle = styled.span`
   color: #a1a1aa;
 `;
 
-
 export const CommunityBannerHeader = styled.div`
   display: flex;
   justify-content: space-between;
@@ -283,12 +282,10 @@ export const CommunityBannerActions = styled.div`
 `;
 
 export const CreditsDisplay = styled.div<{ $isLimitReached: boolean }>`
-  background: ${props => props.$isLimitReached 
-    ? 'rgba(239, 68, 68, 0.15)' 
-    : 'rgba(34, 197, 94, 0.1)'};
-  border: 1px solid ${props => props.$isLimitReached 
-    ? 'rgba(239, 68, 68, 0.3)' 
-    : 'rgba(34, 197, 94, 0.3)'};
+  background: ${(props) =>
+    props.$isLimitReached ? 'rgba(239, 68, 68, 0.15)' : 'rgba(34, 197, 94, 0.1)'};
+  border: 1px solid ${(props) =>
+    props.$isLimitReached ? 'rgba(239, 68, 68, 0.3)' : 'rgba(34, 197, 94, 0.3)'};
   border-radius: 8px;
   padding: 10px 12px;
   text-align: center;
@@ -297,7 +294,7 @@ export const CreditsDisplay = styled.div<{ $isLimitReached: boolean }>`
 export const CreditsValue = styled.div<{ $isLimitReached: boolean }>`
   font-size: 1.2rem;
   font-weight: 700;
-  color: ${props => props.$isLimitReached ? '#ef4444' : '#22c55e'};
+  color: ${(props) => (props.$isLimitReached ? '#ef4444' : '#22c55e')};
   font-family: var(--font-heading);
 `;
 
@@ -356,13 +353,12 @@ export const FeedbackButtons = styled.div`
 `;
 
 export const VoteButton = styled.button<{ $type: 'accurate' | 'inaccurate' }>`
-  background: ${props => props.$type === 'accurate' 
-    ? 'rgba(34, 197, 94, 0.1)' 
-    : 'rgba(239, 68, 68, 0.1)'};
-  border: 1px solid ${props => props.$type === 'accurate' ? '#22c55e' : '#ef4444'};
+  background: ${(props) =>
+    props.$type === 'accurate' ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)'};
+  border: 1px solid ${(props) => (props.$type === 'accurate' ? '#22c55e' : '#ef4444')};
   border-radius: 6px;
   padding: 6px 12px;
-  color: ${props => props.$type === 'accurate' ? '#22c55e' : '#ef4444'};
+  color: ${(props) => (props.$type === 'accurate' ? '#22c55e' : '#ef4444')};
   cursor: pointer;
   display: flex;
   gap: 6px;
@@ -371,9 +367,8 @@ export const VoteButton = styled.button<{ $type: 'accurate' | 'inaccurate' }>`
   transition: all 0.2s;
   
   &:hover {
-    background: ${props => props.$type === 'accurate' 
-      ? 'rgba(34, 197, 94, 0.2)' 
-      : 'rgba(239, 68, 68, 0.2)'};
+    background: ${(props) =>
+      props.$type === 'accurate' ? 'rgba(34, 197, 94, 0.2)' : 'rgba(239, 68, 68, 0.2)'};
     transform: translateY(-1px);
   }
 `;
@@ -432,7 +427,7 @@ export const MatchupDeckName = styled.div`
 export const MatchupWinRate = styled.div<{ $winRate: number }>`
   font-size: 1.2rem;
   font-weight: bold;
-  color: ${props => props.$winRate >= 50 ? '#22c55e' : '#ef4444'};
+  color: ${(props) => (props.$winRate >= 50 ? '#22c55e' : '#ef4444')};
   margin-bottom: 6px;
 `;
 
@@ -484,8 +479,8 @@ export const BarBackground = styled.div`
 
 export const BarFill = styled.div<{ $width: number; $color: string }>`
   height: 100%;
-  width: ${props => props.$width}%;
-  background: ${props => props.$color};
+  width: ${(props) => props.$width}%;
+  background: ${(props) => props.$color};
   border-radius: 4px;
   transition: width 1s ease-out;
 `;
@@ -518,10 +513,11 @@ export const GamePlanGrid = styled.div`
 `;
 
 export const GamePlanCard = styled.div<{ $mode: 'turn1' | 'turn2' }>`
-  background: ${props => props.$mode === 'turn1' 
-    ? 'linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(37, 99, 235, 0.05) 100%)'
-    : 'linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.05) 100%)'};
-  border: 1px solid ${props => props.$mode === 'turn1' ? 'rgba(59, 130, 246, 0.2)' : 'rgba(239, 68, 68, 0.2)'};
+  background: ${(props) =>
+    props.$mode === 'turn1'
+      ? 'linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(37, 99, 235, 0.05) 100%)'
+      : 'linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.05) 100%)'};
+  border: 1px solid ${(props) => (props.$mode === 'turn1' ? 'rgba(59, 130, 246, 0.2)' : 'rgba(239, 68, 68, 0.2)')};
   border-radius: 12px;
   padding: 1.2rem;
   margin-bottom: 1rem;
@@ -532,7 +528,7 @@ export const PlanTitle = styled.h5<{ $color: string }>`
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: ${props => props.$color};
+  color: ${(props) => props.$color};
   font-size: 1rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -563,7 +559,7 @@ export const PointItem = styled.li<{ $type: 'good' | 'bad' }>`
   svg {
     min-width: 16px;
     margin-top: 3px;
-    color: ${props => props.$type === 'good' ? '#22c55e' : '#ef4444'};
+    color: ${(props) => (props.$type === 'good' ? '#22c55e' : '#ef4444')};
   }
 `;
 
@@ -593,7 +589,7 @@ export const AccordionHeader = styled.button`
 `;
 
 export const AccordionContent = styled.div<{ $isOpen: boolean }>`
-  max-height: ${props => props.$isOpen ? '500px' : '0'};
+  max-height: ${(props) => (props.$isOpen ? '500px' : '0')};
   overflow: hidden;
   transition: max-height 0.3s ease-in-out;
   background: rgba(0,0,0,0.2);
@@ -618,7 +614,7 @@ export const SuggestionCard = styled.div<{ $action: 'Adicionar' | 'Remover' }>`
   background: rgba(255,255,255,0.03);
   padding: 0.8rem;
   border-radius: 8px;
-  border-left: 3px solid ${props => props.$action === 'Adicionar' ? '#22c55e' : '#ef4444'};
+  border-left: 3px solid ${(props) => (props.$action === 'Adicionar' ? '#22c55e' : '#ef4444')};
   margin-bottom: 0.5rem;
 `;
 
@@ -635,7 +631,6 @@ export const SuggestionReason = styled.div`
   font-size: 0.8rem;
   color: #94a3b8;
 `;
-
 
 // Modal Styles
 export const FeedbackModalOverlay = styled.div`

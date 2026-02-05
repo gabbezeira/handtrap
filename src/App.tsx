@@ -8,7 +8,7 @@ import styled from 'styled-components';
 import { CrtEffect } from './components/CrtEffect';
 import { DebugProvider } from './contexts/DebugContext';
 import { ThemeProvider } from './contexts/ThemeContext';
-import { Analytics } from "@vercel/analytics/react"
+import { Analytics } from '@vercel/analytics/react';
 
 import { DeckBuilder } from './pages/DeckBuilder';
 import { Login } from './pages/Login';
@@ -33,20 +33,19 @@ const MainContent = styled.div`
 `;
 
 const ProtectedRoute = () => {
-    const { user, loading } = useAuth();
-    
-    if (loading) return <div>Loading Auth...</div>;
-    
-    if (!user) {
-        return <Navigate to="/login" replace />;
-    }
+  const { user, loading } = useAuth();
 
-    return <Outlet />;
+  if (loading) return <div>Loading Auth...</div>;
+
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return <Outlet />;
 };
 
 import { useState, useEffect } from 'react';
 import { AdminDashboard } from './components/AdminDashboard';
-
 
 function App() {
   const [showAdmin, setShowAdmin] = useState(false);
@@ -54,7 +53,7 @@ function App() {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.ctrlKey && e.shiftKey && e.key === 'D') {
-        setShowAdmin(prev => !prev);
+        setShowAdmin((prev) => !prev);
       }
     };
 
@@ -62,12 +61,12 @@ function App() {
 
     // Easter Egg 🥚
     console.log(
-      "%c YOU ACTIVATED MY TRAP CARD! 🃏 ",
-      "color: #bc2a8d; font-size: 24px; font-weight: bold; background: #171717; padding: 10px; border: 2px solid #e855b7; border-radius: 8px;"
+      '%c YOU ACTIVATED MY TRAP CARD! 🃏 ',
+      'color: #bc2a8d; font-size: 24px; font-weight: bold; background: #171717; padding: 10px; border: 2px solid #e855b7; border-radius: 8px;',
     );
     console.log(
-        "%c Stop peeking at my deck list! ",
-      "color: #e855b7; font-size: 14px; font-style: italic;"
+      '%c Stop peeking at my deck list! ',
+      'color: #e855b7; font-size: 14px; font-style: italic;',
     );
 
     return () => window.removeEventListener('keydown', handleKeyDown);
@@ -75,38 +74,38 @@ function App() {
 
   return (
     <AppContainer>
-        <Analytics/>
-        <DebugProvider>
-            <ThemeProvider>
-                <CrtEffect />
-                {/* <MobileBlocker /> */}
-                <GlobalStyles />
-                {showAdmin && <AdminDashboard onClose={() => setShowAdmin(false)} />}
-                <AuthProvider>
-                    <CardProvider>
-                        <ModalProvider>
-                            <MusicProvider>
-                                <Router>
-                                    <MainContent>
-                                        <Routes>
-                                            <Route path="/login" element={<Login />} />
-                                            <Route element={<ProtectedRoute />}>
-                                                <Route path="/decks" element={<SavedDecks />} />
-                                                <Route path="/builder" element={<DeckBuilder />} />
-                                                <Route path="*" element={<Navigate to="/decks" replace />} />
-                                            </Route>
-                                        </Routes>
-                                    </MainContent>
-                                    <Footer />
-                                </Router>
-                            </MusicProvider>
-                        </ModalProvider>
-                    </CardProvider>
-                </AuthProvider>
-            </ThemeProvider>
-        </DebugProvider>
+      <Analytics />
+      <DebugProvider>
+        <ThemeProvider>
+          <CrtEffect />
+          {/* <MobileBlocker /> */}
+          <GlobalStyles />
+          {showAdmin && <AdminDashboard onClose={() => setShowAdmin(false)} />}
+          <AuthProvider>
+            <CardProvider>
+              <ModalProvider>
+                <MusicProvider>
+                  <Router>
+                    <MainContent>
+                      <Routes>
+                        <Route path="/login" element={<Login />} />
+                        <Route element={<ProtectedRoute />}>
+                          <Route path="/decks" element={<SavedDecks />} />
+                          <Route path="/builder" element={<DeckBuilder />} />
+                          <Route path="*" element={<Navigate to="/decks" replace />} />
+                        </Route>
+                      </Routes>
+                    </MainContent>
+                    <Footer />
+                  </Router>
+                </MusicProvider>
+              </ModalProvider>
+            </CardProvider>
+          </AuthProvider>
+        </ThemeProvider>
+      </DebugProvider>
     </AppContainer>
-  )
+  );
 }
 
-export default App
+export default App;

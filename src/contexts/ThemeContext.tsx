@@ -21,13 +21,11 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   }, [currentTheme]);
 
   const toggleTheme = () => {
-    setCurrentTheme(prev => prev === 'default' ? 'trap' : 'default');
+    setCurrentTheme((prev) => (prev === 'default' ? 'trap' : 'default'));
   };
 
   return (
-    <ThemeContext.Provider value={{ currentTheme, toggleTheme }}>
-      {children}
-    </ThemeContext.Provider>
+    <ThemeContext.Provider value={{ currentTheme, toggleTheme }}>{children}</ThemeContext.Provider>
   );
 };
 

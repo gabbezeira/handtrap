@@ -102,7 +102,9 @@ export const Button = styled.button<{ $variant?: 'danger' | 'secondary' }>`
   align-items: center;
   gap: 8px;
   
-  ${props => props.$variant === 'danger' ? `
+  ${(props) =>
+    props.$variant === 'danger'
+      ? `
     background: var(--error-color);
     color: white;
     border: none;
@@ -110,7 +112,8 @@ export const Button = styled.button<{ $variant?: 'danger' | 'secondary' }>`
     &:hover {
       filter: brightness(1.1);
     }
-  ` : `
+  `
+      : `
     background: transparent;
     color: var(--text-secondary);
     border: 1px solid var(--border-color);

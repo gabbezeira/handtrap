@@ -153,7 +153,9 @@ export const ActionButton = styled.button<{ $variant?: 'primary' | 'secondary' }
   gap: 8px;
   transition: all 0.2s;
   
-  ${props => props.$variant === 'primary' ? `
+  ${(props) =>
+    props.$variant === 'primary'
+      ? `
     background: var(--primary-color);
     color: white;
     &:hover { 
@@ -161,7 +163,8 @@ export const ActionButton = styled.button<{ $variant?: 'primary' | 'secondary' }
       transform: translateY(-1px);
     }
     &:active { transform: translateY(0); }
-  ` : `
+  `
+      : `
     background: rgba(255, 255, 255, 0.05);
     color: #cbd5e1;
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -394,10 +397,11 @@ export const GridSection = styled.div`
 `;
 
 export const StrategyCard = styled.div<{ $variant: 'first' | 'second' }>`
-  background: ${props => props.$variant === 'first' 
-    ? 'linear-gradient(145deg, rgba(59, 130, 246, 0.05) 0%, rgba(30, 41, 59, 0.2) 100%)'
-    : 'linear-gradient(145deg, rgba(239, 68, 68, 0.05) 0%, rgba(30, 41, 59, 0.2) 100%)'};
-  border: 1px solid ${props => props.$variant === 'first' ? 'rgba(59, 130, 246, 0.2)' : 'rgba(239, 68, 68, 0.2)'};
+  background: ${(props) =>
+    props.$variant === 'first'
+      ? 'linear-gradient(145deg, rgba(59, 130, 246, 0.05) 0%, rgba(30, 41, 59, 0.2) 100%)'
+      : 'linear-gradient(145deg, rgba(239, 68, 68, 0.05) 0%, rgba(30, 41, 59, 0.2) 100%)'};
+  border: 1px solid ${(props) => (props.$variant === 'first' ? 'rgba(59, 130, 246, 0.2)' : 'rgba(239, 68, 68, 0.2)')};
   border-radius: 12px;
   padding: 20px;
   transition: transform 0.2s;
@@ -408,7 +412,7 @@ export const StrategyCard = styled.div<{ $variant: 'first' | 'second' }>`
 
   h3 {
     margin: 0 0 16px 0;
-    color: ${props => props.$variant === 'first' ? '#60a5fa' : '#f87171'};
+    color: ${(props) => (props.$variant === 'first' ? '#60a5fa' : '#f87171')};
     font-size: 1rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;

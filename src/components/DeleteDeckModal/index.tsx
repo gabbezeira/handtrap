@@ -10,11 +10,11 @@ interface DeleteDeckModalProps {
   deckName?: string;
 }
 
-export const DeleteDeckModal: React.FC<DeleteDeckModalProps> = ({ 
-  isOpen, 
-  onClose, 
-  onConfirm, 
-  deckName 
+export const DeleteDeckModal: React.FC<DeleteDeckModalProps> = ({
+  isOpen,
+  onClose,
+  onConfirm,
+  deckName,
 }) => {
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -34,7 +34,7 @@ export const DeleteDeckModal: React.FC<DeleteDeckModalProps> = ({
 
   return createPortal(
     <Overlay onClick={onClose}>
-      <ModalContent onClick={e => e.stopPropagation()}>
+      <ModalContent onClick={(e) => e.stopPropagation()}>
         <Header>
           <h3>
             <AlertTriangle size={20} color="var(--error-color)" />
@@ -44,11 +44,12 @@ export const DeleteDeckModal: React.FC<DeleteDeckModalProps> = ({
             <X size={20} />
           </CloseButton>
         </Header>
-        
+
         <Body>
           <p>
-            Tem certeza que deseja excluir o deck <strong>{deckName || 'Selecionado'}</strong>? 
-            <br/><br/>
+            Tem certeza que deseja excluir o deck <strong>{deckName || 'Selecionado'}</strong>?
+            <br />
+            <br />
             Esta ação não pode ser desfeita.
           </p>
         </Body>
@@ -64,6 +65,6 @@ export const DeleteDeckModal: React.FC<DeleteDeckModalProps> = ({
         </Footer>
       </ModalContent>
     </Overlay>,
-    document.body
+    document.body,
   );
 };

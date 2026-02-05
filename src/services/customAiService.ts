@@ -43,7 +43,7 @@ export const saveCustomApiConfig = (config: CustomApiConfig): void => {
 export const getCustomApiConfig = (): CustomApiConfig | null => {
   const stored = localStorage.getItem(STORAGE_KEY);
   if (!stored) return null;
-  
+
   try {
     const parsed = JSON.parse(stored);
     return {
@@ -75,7 +75,7 @@ export const isCustomApiEnabled = (): boolean => {
  */
 const buildPrompt = (basePrompt: string, additionalInstructions: string): string => {
   if (!additionalInstructions.trim()) return basePrompt;
-  
+
   return `${basePrompt}
 
     === INSTRUÇÕES ADICIONAIS DO USUÁRIO ===
@@ -87,12 +87,12 @@ const buildPrompt = (basePrompt: string, additionalInstructions: string): string
  * Test API connection with a simple request
  */
 export const testCustomApiConnection = async (
-  provider: AiProvider, 
+  provider: AiProvider,
   apiKey: string,
-  model?: string
+  model?: string,
 ): Promise<{ success: boolean; message: string }> => {
   const testPrompt = 'Responda apenas: "OK"';
-  
+
   try {
     switch (provider) {
       case 'gemini': {
@@ -103,41 +103,41 @@ export const testCustomApiConnection = async (
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              contents: [{ parts: [{ text: testPrompt }] }]
-            })
-          }
+              contents: [{ parts: [{ text: testPrompt }] }],
+            }),
+          },
         );
-        
+
         if (!response.ok) {
           const error = await response.json();
           throw new Error(error.error?.message || 'API key ou Modelo inválido');
         }
-        
+
         return { success: true, message: `Conexão OK com ${modelToUse}!` };
       }
-      
+
       case 'openai': {
         const response = await fetch('https://api.openai.com/v1/chat/completions', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${apiKey}`
+            Authorization: `Bearer ${apiKey}`,
           },
           body: JSON.stringify({
             model: 'gpt-4o-mini',
             messages: [{ role: 'user', content: testPrompt }],
-            max_tokens: 10
-          })
+            max_tokens: 10,
+          }),
         });
-        
+
         if (!response.ok) {
           const error = await response.json();
           throw new Error(error.error?.message || 'API key inválida');
         }
-        
+
         return { success: true, message: 'Conexão estabelecida com OpenAI!' };
       }
-      
+
       case 'anthropic': {
         const response = await fetch('https://api.anthropic.com/v1/messages', {
           method: 'POST',
@@ -145,30 +145,30 @@ export const testCustomApiConnection = async (
             'Content-Type': 'application/json',
             'x-api-key': apiKey,
             'anthropic-version': '2023-06-01',
-            'anthropic-dangerous-direct-browser-access': 'true'
+            'anthropic-dangerous-direct-browser-access': 'true',
           },
           body: JSON.stringify({
             model: 'claude-3-haiku-20240307',
             max_tokens: 10,
-            messages: [{ role: 'user', content: testPrompt }]
-          })
+            messages: [{ role: 'user', content: testPrompt }],
+          }),
         });
-        
+
         if (!response.ok) {
           const error = await response.json();
           throw new Error(error.error?.message || 'API key inválida');
         }
-        
+
         return { success: true, message: 'Conexão estabelecida com Claude!' };
       }
-      
+
       default:
         return { success: false, message: 'Provider não suportado' };
     }
   } catch (error: any) {
-    return { 
-      success: false, 
-      message: error.message || 'Falha na conexão' 
+    return {
+      success: false,
+      message: error.message || 'Falha na conexão',
     };
   }
 };
@@ -178,10 +178,10 @@ export const testCustomApiConnection = async (
  */
 export const analyzeWithCustomApi = async (
   basePrompt: string,
-  config: CustomApiConfig
+  config: CustomApiConfig,
 ): Promise<any> => {
   const fullPrompt = buildPrompt(basePrompt, config.additionalInstructions);
-  
+
   switch (config.provider) {
     case 'gemini': {
       const model = config.model || 'gemini-1.5-flash'; // Fallback if missing
@@ -195,53 +195,54 @@ export const analyzeWithCustomApi = async (
             generationConfig: {
               temperature: 0.7,
               maxOutputTokens: 8192,
-              responseMimeType: "application/json"
-            }
-          })
-        }
+              responseMimeType: 'application/json',
+            },
+          }),
+        },
       );
-      
+
       if (!response.ok) {
         const error = await response.json();
         throw new Error(error.error?.message || 'Erro na API Gemini');
       }
-      
+
       const data = await response.json();
       const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
       return cleanAndParseJSON(text);
     }
-    
+
     case 'openai': {
       const response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${config.apiKey}`
+          Authorization: `Bearer ${config.apiKey}`,
         },
         body: JSON.stringify({
           model: 'gpt-4o',
           messages: [
-            { 
-              role: 'system', 
-              content: 'Você é um especialista em Yu-Gi-Oh! Master Duel. Responda apenas com JSON válido.' 
+            {
+              role: 'system',
+              content:
+                'Você é um especialista em Yu-Gi-Oh! Master Duel. Responda apenas com JSON válido.',
             },
-            { role: 'user', content: fullPrompt }
+            { role: 'user', content: fullPrompt },
           ],
           temperature: 0.7,
-          max_tokens: 4096
-        })
+          max_tokens: 4096,
+        }),
       });
-      
+
       if (!response.ok) {
         const error = await response.json();
         throw new Error(error.error?.message || 'Erro na API OpenAI');
       }
-      
+
       const data = await response.json();
       const text = data.choices?.[0]?.message?.content || '';
       return cleanAndParseJSON(text);
     }
-    
+
     case 'anthropic': {
       const response = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
@@ -249,25 +250,25 @@ export const analyzeWithCustomApi = async (
           'Content-Type': 'application/json',
           'x-api-key': config.apiKey,
           'anthropic-version': '2023-06-01',
-          'anthropic-dangerous-direct-browser-access': 'true'
+          'anthropic-dangerous-direct-browser-access': 'true',
         },
         body: JSON.stringify({
           model: 'claude-3-5-sonnet-20241022',
           max_tokens: 4096,
-          messages: [{ role: 'user', content: fullPrompt }]
-        })
+          messages: [{ role: 'user', content: fullPrompt }],
+        }),
       });
-      
+
       if (!response.ok) {
         const error = await response.json();
         throw new Error(error.error?.message || 'Erro na API Claude');
       }
-      
+
       const data = await response.json();
       const text = data.content?.[0]?.text || '';
       return cleanAndParseJSON(text);
     }
-    
+
     default:
       throw new Error('Provider não suportado');
   }
@@ -285,13 +286,15 @@ const cleanAndParseJSON = (text: string): any => {
     return JSON.parse(clean);
   } catch (error) {
     console.error('JSON Parse Error. Raw text:', text);
-    
+
     // Check for truncation
     const clean = text.trim();
     if (clean.startsWith('{') && !clean.endsWith('}')) {
-        throw new Error('A resposta da IA foi cortada. O modelo pode ter atingido o limite de tokens. Tente usar "gemini-1.5-pro" ou aumentar seus limites.');
+      throw new Error(
+        'A resposta da IA foi cortada. O modelo pode ter atingido o limite de tokens. Tente usar "gemini-1.5-pro" ou aumentar seus limites.',
+      );
     }
-    
+
     throw new Error('Falha ao processar resposta da IA. O formato retornado é inválido.');
   }
 };
@@ -306,7 +309,7 @@ export const getDeckAnalysisPrompt = (deckList: string[]): string => {
     TAREFA: Analise a lista de deck fornecida e forneça uma avaliação técnica e construtiva.
     
     LISTA DO DECK:
-    ${deckList.join(", ")}
+    ${deckList.join(', ')}
     
     REGRAS IMPORTANTES:
     1. NÃO mencione banlist, cartas proibidas ou limitadas. Ignore completamente a banlist.
@@ -451,9 +454,9 @@ export const getHandAnalysisPrompt = (handCards: string[], deckList: string[]): 
   return `
     Você é um especialista em Yu-Gi-Oh! Master Duel. Analise esta mão inicial:
     
-    MÃO: ${handCards.join(", ")}
+    MÃO: ${handCards.join(', ')}
     
-    DECK COMPLETO: ${deckList.join(", ")}
+    DECK COMPLETO: ${deckList.join(', ')}
     
     TAREFA: Avalie a qualidade desta mão e forneça estratégias.
     

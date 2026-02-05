@@ -137,9 +137,9 @@ export const Dropdown = styled.div<{ $isOpen: boolean }>`
   border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
   padding: 0.8rem;
-  opacity: ${props => props.$isOpen ? 1 : 0};
-  transform: translateY(${props => props.$isOpen ? '0' : '-10px'});
-  pointer-events: ${props => props.$isOpen ? 'auto' : 'none'};
+  opacity: ${(props) => (props.$isOpen ? 1 : 0)};
+  transform: translateY(${(props) => (props.$isOpen ? '0' : '-10px')});
+  pointer-events: ${(props) => (props.$isOpen ? 'auto' : 'none')};
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   
   &::before {

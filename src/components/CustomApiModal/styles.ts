@@ -109,11 +109,11 @@ export const ProviderSelector = styled.div`
 `;
 
 export const ProviderOption = styled.button<{ $selected: boolean }>`
-  background: ${({ $selected }) => 
-    $selected 
-      ? 'linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(168, 85, 247, 0.3))' 
+  background: ${({ $selected }) =>
+    $selected
+      ? 'linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(168, 85, 247, 0.3))'
       : 'rgba(255, 255, 255, 0.03)'};
-  border: 1px solid ${({ $selected }) => 
+  border: 1px solid ${({ $selected }) =>
     $selected ? 'rgba(168, 85, 247, 0.5)' : 'rgba(255, 255, 255, 0.08)'};
   border-radius: 10px;
   padding: 14px 12px;
@@ -125,11 +125,11 @@ export const ProviderOption = styled.button<{ $selected: boolean }>`
   gap: 8px;
   
   &:hover {
-    background: ${({ $selected }) => 
-      $selected 
-        ? 'linear-gradient(135deg, rgba(99, 102, 241, 0.35), rgba(168, 85, 247, 0.35))' 
+    background: ${({ $selected }) =>
+      $selected
+        ? 'linear-gradient(135deg, rgba(99, 102, 241, 0.35), rgba(168, 85, 247, 0.35))'
         : 'rgba(255, 255, 255, 0.06)'};
-    border-color: ${({ $selected }) => 
+    border-color: ${({ $selected }) =>
       $selected ? 'rgba(168, 85, 247, 0.6)' : 'rgba(255, 255, 255, 0.15)'};
   }
 `;
@@ -164,10 +164,14 @@ export const Label = styled.label<{ $variant?: 'success' | 'error' | 'warning' }
   font-weight: 500;
   color: ${({ $variant }) => {
     switch ($variant) {
-      case 'success': return '#22c55e';
-      case 'error': return '#ef4444';
-      case 'warning': return '#eab308';
-      default: return '#ccc';
+      case 'success':
+        return '#22c55e';
+      case 'error':
+        return '#ef4444';
+      case 'warning':
+        return '#eab308';
+      default:
+        return '#ccc';
     }
   }};
   margin-bottom: 8px;
@@ -345,10 +349,8 @@ export const Toggle = styled.button<{ $active: boolean }>`
   cursor: pointer;
   position: relative;
   transition: all 0.2s;
-  background: ${({ $active }) => 
-    $active 
-      ? 'linear-gradient(135deg, #6366f1, #a855f7)' 
-      : 'rgba(255, 255, 255, 0.15)'};
+  background: ${({ $active }) =>
+    $active ? 'linear-gradient(135deg, #6366f1, #a855f7)' : 'rgba(255, 255, 255, 0.15)'};
   
   &::after {
     content: '';
@@ -358,7 +360,7 @@ export const Toggle = styled.button<{ $active: boolean }>`
     border-radius: 50%;
     background: #fff;
     top: 3px;
-    left: ${({ $active }) => $active ? '23px' : '3px'};
+    left: ${({ $active }) => ($active ? '23px' : '3px')};
     transition: left 0.2s;
   }
 `;

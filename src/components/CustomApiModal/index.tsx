@@ -30,7 +30,7 @@ import {
   TestButton,
   InputRow,
   InputWrapper,
-  ModelHelperText
+  ModelHelperText,
 } from './styles';
 import {
   AiProvider,
@@ -38,7 +38,7 @@ import {
   getCustomApiConfig,
   saveCustomApiConfig,
   clearCustomApiConfig,
-  testCustomApiConnection
+  testCustomApiConnection,
 } from '../../services/customAiService';
 
 interface CustomApiModalProps {
@@ -49,7 +49,7 @@ interface CustomApiModalProps {
 const PROVIDERS: { id: AiProvider; name: string; icon: string }[] = [
   { id: 'gemini', name: 'Gemini', icon: '✨' },
   { id: 'openai', name: 'ChatGPT', icon: '🤖' },
-  { id: 'anthropic', name: 'Claude', icon: '🧠' }
+  { id: 'anthropic', name: 'Claude', icon: '🧠' },
 ];
 
 export const CustomApiModal: React.FC<CustomApiModalProps> = ({ isOpen, onClose }) => {
@@ -60,7 +60,7 @@ export const CustomApiModal: React.FC<CustomApiModalProps> = ({ isOpen, onClose 
   const [enabled, setEnabled] = useState(false);
   const [testStatus, setTestStatus] = useState<'idle' | 'testing' | 'success' | 'error'>('idle');
   const [testMessage, setTestMessage] = useState('');
-  
+
   useEffect(() => {
     const config = getCustomApiConfig();
     if (config) {
@@ -83,7 +83,7 @@ export const CustomApiModal: React.FC<CustomApiModalProps> = ({ isOpen, onClose 
     setTestMessage('');
 
     const result = await testCustomApiConnection(provider, apiKey, model);
-    
+
     if (result.success) {
       setTestStatus('success');
       setTestMessage(result.message);
@@ -105,7 +105,7 @@ export const CustomApiModal: React.FC<CustomApiModalProps> = ({ isOpen, onClose 
       apiKey,
       additionalInstructions,
       enabled,
-      model
+      model,
     };
 
     saveCustomApiConfig(config);
@@ -127,7 +127,7 @@ export const CustomApiModal: React.FC<CustomApiModalProps> = ({ isOpen, onClose 
 
   return createPortal(
     <Overlay onClick={onClose}>
-      <Modal onClick={e => e.stopPropagation()}>
+      <Modal onClick={(e) => e.stopPropagation()}>
         <Header>
           <Title>
             <Cpu size={22} />
@@ -143,8 +143,8 @@ export const CustomApiModal: React.FC<CustomApiModalProps> = ({ isOpen, onClose 
             <WarningBanner>
               <Shield size={20} />
               <WarningText>
-                <strong>Sua API key é armazenada apenas localmente</strong> no seu navegador. 
-                Ela nunca é enviada para nossos servidores ou salva em banco de dados.
+                <strong>Sua API key é armazenada apenas localmente</strong> no seu navegador. Ela
+                nunca é enviada para nossos servidores ou salva em banco de dados.
               </WarningText>
             </WarningBanner>
           </Section>
@@ -153,21 +153,16 @@ export const CustomApiModal: React.FC<CustomApiModalProps> = ({ isOpen, onClose 
             <ToggleRow>
               <ToggleLabel>
                 <ToggleTitle>Usar API Personalizada</ToggleTitle>
-                <ToggleDescription>
-                  Desativado usa o sistema padrão gratuito
-                </ToggleDescription>
+                <ToggleDescription>Desativado usa o sistema padrão gratuito</ToggleDescription>
               </ToggleLabel>
-              <Toggle 
-                $active={enabled} 
-                onClick={() => setEnabled(!enabled)}
-              />
+              <Toggle $active={enabled} onClick={() => setEnabled(!enabled)} />
             </ToggleRow>
           </Section>
 
           <Section>
             <SectionTitle>Provedor de IA</SectionTitle>
             <ProviderSelector>
-              {PROVIDERS.map(p => (
+              {PROVIDERS.map((p) => (
                 <ProviderOption
                   key={p.id}
                   $selected={provider === p.id}
@@ -192,7 +187,7 @@ export const CustomApiModal: React.FC<CustomApiModalProps> = ({ isOpen, onClose 
                     type="password"
                     placeholder={`Insira sua ${provider === 'openai' ? 'OpenAI' : provider === 'anthropic' ? 'Anthropic' : 'Google AI'} API key`}
                     value={apiKey}
-                    onChange={e => {
+                    onChange={(e) => {
                       setApiKey(e.target.value);
                       setTestStatus('idle');
                     }}
@@ -222,7 +217,7 @@ export const CustomApiModal: React.FC<CustomApiModalProps> = ({ isOpen, onClose 
                 </Label>
               )}
             </InputGroup>
-            
+
             {provider === 'gemini' && (
               <InputGroup>
                 <Label>Modelo (Opcional)</Label>
@@ -230,13 +225,14 @@ export const CustomApiModal: React.FC<CustomApiModalProps> = ({ isOpen, onClose 
                   type="text"
                   placeholder="Ex: gemini-2.0-flash-exp, gemini-1.5-pro"
                   value={model}
-                  onChange={e => {
+                  onChange={(e) => {
                     setModel(e.target.value);
                     setTestStatus('idle');
                   }}
                 />
                 <ModelHelperText>
-                   Padrão: gemini-1.5-flash. Se usar "gemini-2.0-flash", digite exatamente o nome do modelo.
+                  Padrão: gemini-1.5-flash. Se usar "gemini-2.0-flash", digite exatamente o nome do
+                  modelo.
                 </ModelHelperText>
               </InputGroup>
             )}
@@ -248,12 +244,10 @@ export const CustomApiModal: React.FC<CustomApiModalProps> = ({ isOpen, onClose 
               <TextArea
                 placeholder="Ex: Foque mais em combos going second, ignore sugestões de hand traps..."
                 value={additionalInstructions}
-                onChange={e => setAdditionalInstructions(e.target.value)}
+                onChange={(e) => setAdditionalInstructions(e.target.value)}
                 rows={4}
               />
-              <Label>
-                Essas instruções serão adicionadas ao prompt padrão do sistema.
-              </Label>
+              <Label>Essas instruções serão adicionadas ao prompt padrão do sistema.</Label>
             </InputGroup>
           </Section>
         </Body>
@@ -268,6 +262,6 @@ export const CustomApiModal: React.FC<CustomApiModalProps> = ({ isOpen, onClose 
         </Footer>
       </Modal>
     </Overlay>,
-    document.body
+    document.body,
   );
 };

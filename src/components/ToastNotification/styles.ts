@@ -25,7 +25,7 @@ export const ToastContainer = styled.div<{ $visible: boolean }>`
   gap: 12px;
   max-width: 300px;
   
-  animation: ${props => props.$visible ? slideIn : fadeOut} 0.5s forwards;
+  animation: ${(props) => (props.$visible ? slideIn : fadeOut)} 0.5s forwards;
   pointer-events: none; /* Just display, don't block clicks underneath */
 `;
 

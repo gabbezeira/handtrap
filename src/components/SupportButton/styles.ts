@@ -54,8 +54,8 @@ export const SupportLabel = styled.div<{ $visible: boolean }>`
   z-index: 1000;
   pointer-events: none;
   
-  opacity: ${props => props.$visible ? 1 : 0};
-  transform: ${props => props.$visible ? 'translateX(0)' : 'translateX(10px)'};
+  opacity: ${(props) => (props.$visible ? 1 : 0)};
+  transform: ${(props) => (props.$visible ? 'translateX(0)' : 'translateX(10px)')};
   transition: all 0.3s ease;
 
   &::after {
