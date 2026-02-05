@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { MusicSettings } from '../MusicSettings';
 import { SettingsModal } from '../SettingsModal';
 import { UpgradeModal } from '../UpgradeModal';
+import LogoHandtrap from '../../assets/images/logo-white-text-inline.png';
 import { db } from '../../firebase/config';
 import { doc, onSnapshot } from 'firebase/firestore';
 import {
@@ -72,7 +73,7 @@ export const Header = () => {
     <>
       <HeaderContainer>
         <Logo onClick={() => navigate('/decks')}>
-          Hand<span>trap</span>
+          <img src={LogoHandtrap} alt="Logo" />
         </Logo>
 
         <RightSection>

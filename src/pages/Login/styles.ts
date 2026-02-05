@@ -72,6 +72,11 @@ export const Title = styled.h1`
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+
+  img {
+    width: auto;
+    height: 32px;
+  }
   
   span {
     color: var(--primary-color);

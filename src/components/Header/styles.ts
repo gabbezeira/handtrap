@@ -36,11 +36,16 @@ export const Logo = styled.div`
   letter-spacing: 0.1em;
   cursor: pointer;
   font-family: var(--font-heading);
+
+  img {
+    width: auto;
+    height: 32px;
+  }
   
   span {
     color: #a855f7;
   }
-  
+
   &:hover {
     filter: brightness(1.2);
   }

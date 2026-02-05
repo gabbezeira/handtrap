@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { Mail, Lock } from 'lucide-react';
+import LogoHandtrap from '../../assets/images/logo-white-text-inline.png';
 import {
   Container,
   GlassCard,
@@ -61,7 +62,7 @@ export const Login = () => {
     <Container>
       <GlassCard>
         <Title>
-          Acessar <span>Handtrap</span>
+          <img src={LogoHandtrap} alt="Logo" />
         </Title>
         <Substring>
           {isLogin
@@ -115,7 +116,9 @@ export const Login = () => {
             alt="G"
             width={18}
           />
-          Entrar com Google
+          {isLogin
+            ? 'Entrar com o google'
+            : 'Registrar com o google'}
         </GoogleButton>
 
         <ToggleText onClick={() => setIsLogin(!isLogin)}>
