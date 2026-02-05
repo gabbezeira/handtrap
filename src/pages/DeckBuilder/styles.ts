@@ -147,7 +147,7 @@ export const DetailPanel = styled.div`
 `;
 
 export const DetailContent = styled.div`
-  padding: 2rem 1rem;
+  padding: 2rem 1.3rem;
   position: relative;
   z-index: 2;
 
