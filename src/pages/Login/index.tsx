@@ -50,10 +50,10 @@ export const Login = () => {
 
     const handleGoogle = async () => {
         try {
-            await loginWithGoogle();
+            await loginWithGoogle(isLogin ? 'login' : 'register');
             navigate('/dashboard');
         } catch (err: any) {
-            setError('Falha no login com Google: ' + err.message);
+            setError(err.message);
         }
     };
 

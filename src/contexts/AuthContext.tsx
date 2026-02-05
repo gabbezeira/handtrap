@@ -8,14 +8,15 @@ import {
     GoogleAuthProvider,
     signInWithPopup
 } from 'firebase/auth';
-import { auth } from '../firebase/config';
+import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { auth, db } from '../firebase/config';
 
 interface AuthContextType {
     user: User | null;
     loading: boolean;
     login: (email: string, pass: string) => Promise<void>;
     register: (email: string, pass: string) => Promise<void>;
-    loginWithGoogle: () => Promise<void>;
+    loginWithGoogle: (mode?: 'login' | 'register') => Promise<void>;
     logout: () => Promise<void>;
 }
 
@@ -39,17 +40,60 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         return unsubscribe;
     }, []);
 
+    const createProfile = async (user: User) => {
+        const userRef = doc(db, 'users', user.uid);
+        const userSnap = await getDoc(userRef);
+
+        if (!userSnap.exists()) {
+            await setDoc(userRef, {
+                uid: user.uid,
+                email: user.email,
+                name: user.displayName || 'Usuário',
+                photoURL: user.photoURL || '',
+                createdAt: serverTimestamp(),
+                subscription: {
+                    plan: 'free',
+                    status: 'active'
+                }
+            });
+        }
+    };
+
     const login = async (email: string, pass: string) => {
-        await signInWithEmailAndPassword(auth, email, pass);
+        const result = await signInWithEmailAndPassword(auth, email, pass);
+        // Ensure profile exists even on regular login, just in case
+        const userRef = doc(db, 'users', result.user.uid);
+        const userSnap = await getDoc(userRef);
+        if (!userSnap.exists()) {
+           throw new Error('Perfil de usuário não encontrado. Por favor, contate o suporte ou registre-se novamente.');
+        }
     };
 
     const register = async (email: string, pass: string) => {
-        await createUserWithEmailAndPassword(auth, email, pass);
+        const result = await createUserWithEmailAndPassword(auth, email, pass);
+        await createProfile(result.user);
     };
 
-    const loginWithGoogle = async () => {
+    const loginWithGoogle = async (mode: 'login' | 'register' = 'login') => {
         const provider = new GoogleAuthProvider();
-        await signInWithPopup(auth, provider);
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
+
+        const userRef = doc(db, 'users', user.uid);
+        const userSnap = await getDoc(userRef);
+
+        if (mode === 'login') {
+            if (!userSnap.exists()) {
+                await signOut(auth);
+                throw new Error('Conta não encontrada. Por favor, faça o cadastro primeiro.');
+            }
+        } else {
+            // mode === 'register'
+            if (!userSnap.exists()) {
+                await createProfile(user);
+            }
+            // If it exists, we just proceed as logged in
+        }
     }
 
     const logout = async () => {

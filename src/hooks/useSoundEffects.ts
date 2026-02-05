@@ -4,15 +4,14 @@ import card01 from '../assets/sounds/card01.MP3';
 import card02 from '../assets/sounds/card02.MP3';
 
 export const useSoundEffects = () => {
-    // Preload audio objects
+
     const sounds = useRef([
         new Audio(card00),
         new Audio(card01),
         new Audio(card02)
     ]);
 
-    // Set volume
-    sounds.current.forEach(s => s.volume = 0.40);
+    sounds.current.forEach(s => s.volume = 0.10);
 
 
     const playAddSound = useCallback(() => {

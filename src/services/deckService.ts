@@ -1,5 +1,6 @@
 import { db } from '../firebase/config';
-import { collection, addDoc, getDocs, query, where, deleteDoc, doc, setDoc } from 'firebase/firestore';
+import { collection, getDocs, query, where, deleteDoc, doc, setDoc, collectionGroup } from 'firebase/firestore';
+import { CardData } from './cardDatabase';
 
 export interface DeckDocument {
     id?: string;
@@ -8,56 +9,96 @@ export interface DeckDocument {
     authorId: string;
     isPublic: boolean;
     cards: {
-        main: number[];
-        extra: number[];
+        main: CardData[];
+        extra: CardData[];
     };
     deckHash: string;
     createdAt: number;
 }
 
-const COLLECTION_NAME = 'decks';
-
-export const saveDeck = async (deckData: Omit<DeckDocument, 'createdAt' | 'authorId'> & { authorId?: string, createdAt?: number }) => {
-    // If deckData has an ID, we update
-    if (deckData.id) {
-        const docRef = doc(db, COLLECTION_NAME, deckData.id);
-        await setDoc(docRef, {
-            ...deckData,
-            createdAt: deckData.createdAt || Date.now() // Preserve or update date
-        }, { merge: true });
-        return deckData.id;
-    } else {
-        // Create new - Remove 'id' field to avoid "undefined" error
-        const { id, ...dataWithoutId } = deckData;
-        const docRef = await addDoc(collection(db, COLLECTION_NAME), {
-            ...dataWithoutId,
-            authorId: deckData.authorId || 'anonymous',
-            createdAt: Date.now()
-        });
-        return docRef.id;
+export const saveDeck = async (userId: string, deckData: Omit<DeckDocument, 'createdAt' | 'authorId'> & { createdAt?: number }) => {
+    try {
+        const decksRef = collection(db, 'users', userId, 'decks');
+        
+        // If deckData has an ID, we update
+        if (deckData.id) {
+            const docRef = doc(decksRef, deckData.id);
+            await setDoc(docRef, {
+                ...deckData,
+                id: deckData.id, // Ensure ID is stored
+                authorId: userId, 
+                createdAt: deckData.createdAt || Date.now()
+            }, { merge: true });
+            return deckData.id;
+        } else {
+            // Create new
+            const { id: _, ...dataWithoutId } = deckData;
+            // Generate a reference with a new ID
+            const docRef = doc(decksRef);
+            await setDoc(docRef, {
+                ...dataWithoutId,
+                id: docRef.id, // Store the generated ID inside the document
+                authorId: userId,
+                createdAt: Date.now()
+            });
+            return docRef.id;
+        }
+    } catch (error: any) {
+         if (error.code === 'failed-precondition' || error.message?.includes('index')) {
+            console.error("🔥 FIRESTORE INDEX MISSING 🔥");
+            console.error("Create it here:", error.message);
+        }
+        throw error;
     }
 };
 
 export const getUserDecks = async (userId: string): Promise<DeckDocument[]> => {
-    const q = query(collection(db, COLLECTION_NAME), where("authorId", "==", userId));
-    const snapshot = await getDocs(q);
-    return snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-    } as DeckDocument));
+    try {
+        const decksRef = collection(db, 'users', userId, 'decks');
+        const snapshot = await getDocs(decksRef);
+        
+        // Parallel self-healing check
+        await Promise.all(snapshot.docs.map(async (d) => {
+            const data = d.data();
+            if (data.id !== d.id) {
+                // If 'id' field is missing or wrong, fix it
+                await setDoc(d.ref, { id: d.id }, { merge: true });
+            }
+        }));
+
+        return snapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        } as DeckDocument));
+    } catch (error: any) {
+        if (error.code === 'failed-precondition' || error.message?.includes('index')) {
+            console.error("🔥 FIRESTORE INDEX MISSING 🔥");
+            console.error("Create it here:", error.message);
+        }
+        throw error;
+    }
 };
 
-export const deleteDeck = async (deckId: string): Promise<void> => {
-    await deleteDoc(doc(db, COLLECTION_NAME, deckId));
+export const deleteDeck = async (userId: string, deckId: string): Promise<void> => {
+    await deleteDoc(doc(db, 'users', userId, 'decks', deckId));
 };
 
 export const getDeck = async (deckId: string): Promise<DeckDocument | null> => {
-    const docRef = doc(db, COLLECTION_NAME, deckId);
-    // Dynamic import to avoid circular dep issues in some setups, or just standard import above
-    const { getDoc } = await import('firebase/firestore'); 
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-        return { id: docSnap.id, ...docSnap.data() } as DeckDocument;
+    try {
+        // Query global collection group by 'id' field
+        const q = query(collectionGroup(db, 'decks'), where('id', '==', deckId));
+        const snapshot = await getDocs(q);
+        
+        if (!snapshot.empty) {
+            const docSnap = snapshot.docs[0];
+            return { id: docSnap.id, ...docSnap.data() } as DeckDocument;
+        }
+        return null;
+    } catch (error: any) {
+        if (error.code === 'failed-precondition' || error.message?.includes('index')) {
+            console.error("🔥 FIRESTORE INDEX MISSING 🔥");
+            console.error("Create it here:", error.message);
+        }
+        throw error;
     }
-    return null;
 };

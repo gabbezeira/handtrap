@@ -174,20 +174,6 @@ export const RarityBadge = styled.div<{ $rarity: 'UR' | 'SR' | 'R' | 'N' }>`
   border: none;
 `;
 
-export const TypeBadge = styled.div`
-  background: var(--border-color);
-  padding: 4px 12px;
-  border-radius: 4px;
-  color: var(--accent-color);
-  font-size: 0.8rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  margin-bottom: 0.5rem;
-  text-align: center;
-  display: inline-block;
-  border: var(--glass-border);
-`;
-
 export const AiButton = styled.button`
   background: linear-gradient(90deg, #8b5cf6, #d946ef);
   border: 1px solid rgba(255,255,255,0.2);
@@ -288,37 +274,6 @@ export const CloseButton = styled.button`
 
 export const ModalBody = styled.div`
   padding: 1.5rem;
-  
-  h4 {
-    color: var(--text-primary);
-    margin-bottom: 0.5rem;
-    font-size: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  
-  p {
-    color: var(--text-secondary);
-    line-height: 1.6;
-    margin-bottom: 1.5rem;
-    font-size: 0.95rem;
-  }
-
-  ul {
-    list-style: none;
-    padding: 0;
-    
-    li {
-      background: rgba(255,255,255,0.03);
-      padding: 0.8rem;
-      border-radius: 6px;
-      margin-bottom: 0.5rem;
-      border-left: 2px solid var(--primary-color);
-      color: var(--text-secondary);
-      font-size: 0.9rem;
-    }
-  }
 `;
 
 export const StatGrid = styled.div`
@@ -428,6 +383,10 @@ export const SectionLabel = styled.h3`
   flex-shrink: 0;
 `;
 
+export const DeckCount = styled.span<{ $isComplete?: boolean }>`
+  color: ${props => props.$isComplete ? 'var(--success-color)' : 'var(--text-secondary)'};
+`;
+
 export const CardGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
@@ -523,6 +482,13 @@ export const SearchInputRow = styled.div`
         color: var(--accent-color);
     }
   }
+`;
+
+export const SearchRowInner = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
 `;
 
 export const CatalogGrid = styled.div`
@@ -629,9 +595,179 @@ export const AIContainer = styled.div`
   overflow: hidden;
 `;
 
-export const SearchRowInner = styled.div`
+// Loading State
+export const LoadingContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  color: var(--text-primary);
+  gap: 12px;
+`;
+
+// Header Actions Group
+export const HeaderActions = styled.div`
+  display: flex;
+  gap: 0.8rem;
+`;
+
+// CP Cost Display
+export const CPContainer = styled.div`
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  width: 100%;
+  gap: 6px;
+  background: rgba(0,0,0,0.3);
+  padding: 4px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.1);
+
+  img {
+    width: 20px;
+    height: 20px;
+  }
+`;
+
+export const CPValueUR = styled.span`
+  color: #fde0ff;
+  font-weight: bold;
+  font-size: 0.9rem;
+`;
+
+export const CPValueSR = styled.span`
+  color: #cbd5e1;
+  font-weight: bold;
+  font-size: 0.9rem;
+`;
+
+// AI Modal Loading State
+export const AiLoadingState = styled.div`
+  text-align: center;
+  padding: 3rem;
+  color: var(--text-secondary);
+  
+  p {
+    font-size: 1.1rem;
+    letter-spacing: 0.05em;
+  }
+`;
+
+// AI Summary Section
+export const AiSummarySection = styled.div`
+  margin-bottom: 2rem;
+`;
+
+export const CustomApiBanner = styled.div`
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(22, 163, 74, 0.1) 100%);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  
+  svg {
+    color: #22c55e;
+    flex-shrink: 0;
+  }
+`;
+
+export const CustomApiBannerText = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+`;
+
+export const CustomApiBannerTitle = styled.span`
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #22c55e;
+`;
+
+export const CustomApiBannerSubtitle = styled.span`
+  font-size: 0.7rem;
+  color: #a1a1aa;
+`;
+
+export const AiSummaryTitle = styled.div`
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  letter-spacing: 0.1em;
+  margin-bottom: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
+export const AiSummaryContent = styled.p`
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #e2e8f0;
+  padding: 1.5rem;
+  background: rgba(255,255,255,0.03);
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.05);
+  border-left: 4px solid var(--primary-color);
+`;
+
+// AI Usage Moments List
+export const UsageList = styled.ul`
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+`;
+
+export const UsageListItem = styled.li`
+  background: linear-gradient(90deg, rgba(255,255,255,0.03) 0%, transparent 100%);
+  padding: 1rem 1.2rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.05);
+  font-size: 0.95rem;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  transition: transform 0.2s;
+  cursor: default;
+`;
+
+export const UsageNumber = styled.span`
+  color: var(--primary-color);
+  font-weight: 900;
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  opacity: 0.8;
+`;
+
+export const UsageText = styled.span`
+  color: #cbd5e1;
+`;
+
+// Search States
+export const SearchLoadingState = styled.div`
+  padding: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+`;
+
+export const SearchEmptyState = styled.div`
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 3rem;
+  color: var(--text-secondary);
+`;
+
+export const SearchEmptyIcon = styled.div`
+  margin-bottom: 1rem;
+  font-size: 2rem;
+`;
+
+// Icon wrapper for opacity
+export const IconWrapper = styled.div`
+  opacity: 0.5;
 `;

@@ -30,7 +30,7 @@ export const Logo = styled.div`
   
   
   span {
-    color: var(--accent-color);
+    color: #a855f7;
   }
   
   &:hover {
@@ -155,4 +155,70 @@ export const ThemeToggleButton = styled.button`
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
   }
+`;
+
+export const RightSection = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+`;
+
+export const DropdownLabel = styled.div`
+  padding: 0 0.5rem 0.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  margin-bottom: 0.5rem;
+  font-size: 0.75rem;
+  color: #94a3b8;
+  letter-spacing: 0.05em;
+`;
+
+export const MenuItemDanger = styled(MenuItem)`
+  color: #ef4444;
+`;
+
+export const PremiumButton = styled.button`
+  background: linear-gradient(135deg, #6366f1, #a855f7);
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+
+  &:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+  }
+
+  svg {
+    filter: drop-shadow(0 2px 2px rgba(0,0,0,0.1));
+  }
+`;
+
+export const PremiumBadge = styled.div`
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(168, 85, 247, 0.1));
+  border: 1px solid rgba(168, 85, 247, 0.2);
+  color: #fbbf24;
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  user-select: none;
+`;
+
+export const ChevronWrapper = styled.span`
+  opacity: 0.5;
+  display: flex;
 `;

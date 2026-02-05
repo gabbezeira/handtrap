@@ -36,11 +36,10 @@ const loadDatabase = async () => {
             // Check if we already have data
             const count = await db.count('cards');
             if (count > 0) {
-                console.log(`Database already populated with ${count} cards.`);
                 return;
             }
 
-            console.log('Database empty. Fetching JSON...');
+
             
             const requestId = 'card-db-fetch';
             metricsManager.startRequest(requestId);
@@ -56,7 +55,6 @@ const loadDatabase = async () => {
             
             if (Array.isArray(response.data)) {
                 const cards: CardData[] = response.data;
-                console.log(`Fetched ${cards.length} cards. Populating IndexedDB...`);
                 
                 // Use a transaction for bulk insert
                 const tx = db.transaction('cards', 'readwrite');
@@ -69,7 +67,6 @@ const loadDatabase = async () => {
                 }
                 
                 await tx.done;
-                console.log('IndexedDB population complete.');
             } else {
                 console.error('Local DB format incorrect');
             }

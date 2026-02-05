@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDebug } from '../../contexts/DebugContext';
-import { X, Activity, Server, Globe } from 'lucide-react';
+import { X, Activity, Server, Globe, DollarSign, Loader2 } from 'lucide-react';
+import { api } from '../../services/api';
 import {
   DashboardContainer,
   Header,
@@ -18,10 +19,21 @@ import {
   LoginActions
 } from './styles';
 
+interface UsageStats {
+  totalCost: number;
+  totalInputTokens: number;
+  totalOutputTokens: number;
+  totalCalls: number;
+  byOperation: Record<string, { calls: number; cost: number; tokens: number }>;
+  byModel: Record<string, { calls: number; cost: number; tokens: number }>;
+}
+
 export const AdminDashboard = ({ onClose }: { onClose: () => void }) => {
     const { systemMetrics, externalMetrics } = useDebug();
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [password, setPassword] = useState('');
+    const [usageStats, setUsageStats] = useState<UsageStats | null>(null);
+    const [loadingUsage, setLoadingUsage] = useState(false);
 
     const handleLogin = () => {
       const adminPassword = import.meta.env.VITE_ADMIN_PASSWORD;
@@ -30,6 +42,24 @@ export const AdminDashboard = ({ onClose }: { onClose: () => void }) => {
           setIsAuthenticated(true);
       } else {
           alert('Senha incorreta');
+      }
+    };
+
+    useEffect(() => {
+      if (isAuthenticated) {
+        fetchUsageStats();
+      }
+    }, [isAuthenticated]);
+
+    const fetchUsageStats = async () => {
+      setLoadingUsage(true);
+      try {
+        const response = await api.get('/admin/usage?period=30');
+        setUsageStats(response.data);
+      } catch (error) {
+        console.error('Failed to fetch usage stats:', error);
+      } finally {
+        setLoadingUsage(false);
       }
     };
 
@@ -71,6 +101,55 @@ export const AdminDashboard = ({ onClose }: { onClose: () => void }) => {
             </Header>
 
             <StatsGrid>
+                {/* Gemini API Costs */}
+                <StatCard $type="cost">
+                    <CardTitle><DollarSign size={20} color="#10b981"/> Custos Gemini API (30 dias)</CardTitle>
+                    
+                    {loadingUsage ? (
+                      <MetricRow>
+                        <span>Carregando...</span>
+                        <Loader2 size={16} className="animate-spin" />
+                      </MetricRow>
+                    ) : usageStats ? (
+                      <>
+                        <MetricRow>
+                          <span>💰 Custo Total</span>
+                          <MetricValue $color="#10b981">${usageStats.totalCost.toFixed(4)}</MetricValue>
+                        </MetricRow>
+                        
+                        <MetricRow>
+                          <span>📊 Chamadas Totais</span>
+                          <MetricValue>{usageStats.totalCalls}</MetricValue>
+                        </MetricRow>
+                        
+                        <MetricRow>
+                          <span>📥 Input Tokens</span>
+                          <MetricValue>{(usageStats.totalInputTokens / 1000).toFixed(1)}K</MetricValue>
+                        </MetricRow>
+                        
+                        <MetricRow>
+                          <span>📤 Output Tokens</span>
+                          <MetricValue>{(usageStats.totalOutputTokens / 1000).toFixed(1)}K</MetricValue>
+                        </MetricRow>
+
+                        {usageStats.byOperation && Object.entries(usageStats.byOperation).map(([op, data]) => (
+                          <MetricRow key={op}>
+                            <span style={{ fontSize: '0.8rem', opacity: 0.8 }}>
+                              {op}: {data.calls}x
+                            </span>
+                            <MetricValue $color="#94a3b8" style={{ fontSize: '0.8rem' }}>
+                              ${data.cost.toFixed(4)}
+                            </MetricValue>
+                          </MetricRow>
+                        ))}
+                      </>
+                    ) : (
+                      <MetricRow>
+                        <span>Sem dados</span>
+                      </MetricRow>
+                    )}
+                </StatCard>
+
                 <StatCard $type="system">
                     <CardTitle><Server size={20} color="#3b82f6"/> Backend (System)</CardTitle>
                     
@@ -126,4 +205,3 @@ export const AdminDashboard = ({ onClose }: { onClose: () => void }) => {
         </DashboardContainer>
     );
 };
-

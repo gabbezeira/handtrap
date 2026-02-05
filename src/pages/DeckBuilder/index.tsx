@@ -3,12 +3,18 @@ import { createPortal } from 'react-dom';
 import { useSearchParams } from 'react-router-dom';
 import { useCardDatabase } from '../../contexts/CardContext';
 import { AiAnalysisPanel } from '../../components/AiAnalysisPanel';
-import { CardData, fetchCardsByIds } from '../../services/cardDatabase';
+import { CardData } from '../../services/cardDatabase';
 import { HandSimulationModal } from '../../components/HandSimulationModal';
-import { Search, Sword, Shield, BrainCircuit, Sparkles, X, Info, Box, Loader2, Save, Dices } from 'lucide-react';
+import { UpgradeModal } from '../../components/UpgradeModal';
+import { AiLoader } from '../../components/AiLoader';
+import { Search, Sword, Shield, BrainCircuit, Sparkles, X, Info, Box, Loader2, Save, Dices, Share2, Key } from 'lucide-react';
 import { saveDeck, getDeck } from '../../services/deckService';
-import { analyzeDeckWithCache, analyzeCardWithCache, AiDeckResponse } from '../../services/aiAnalysisService';
+import { analyzeDeckWithCache, analyzeCardWithCache, AiDeckResponse, AiCardResponse } from '../../services/aiAnalysisService';
+import { getDeckAnalysisUsage } from '../../services/usersService';
+import { getCustomApiConfig } from '../../services/customAiService';
 import { getCardImageUrl } from '@/utils/imageUrl';
+import { db } from '../../firebase/config';
+import { doc, onSnapshot } from 'firebase/firestore';
 import { Header } from '../../components/Header';
 import { useAuth } from '../../contexts/AuthContext';
 import { useModal } from '../../contexts/ModalContext';
@@ -16,6 +22,7 @@ import cpurIcon from '../../assets/images/cpur.png';
 import cpsrIcon from '../../assets/images/cpsr.png';
 import { useSoundEffects } from '../../hooks/useSoundEffects';
 import { SupportButton } from '../../components/SupportButton';
+import { encodeDeck, decodeDeck } from '../../utils/deckShareUtils';
 
 import {
   PageWrapper,
@@ -30,6 +37,7 @@ import {
   DeckAreaContainer,
   DeckSection,
   SectionLabel,
+  DeckCount,
   CardGrid,
   MiniCard,
   SearchContainer,
@@ -54,14 +62,33 @@ import {
   ModalContent, 
   ModalHeader,
   ModalBody,
-  CloseButton
+  CloseButton,
+  LoadingContainer,
+  HeaderActions,
+  CPContainer,
+  CPValueUR,
+  CPValueSR,
+  AiSummarySection,
+  AiSummaryTitle,
+  AiSummaryContent,
+  UsageList,
+  UsageListItem,
+  UsageNumber,
+  UsageText,
+  SearchLoadingState,
+  SearchEmptyState,
+  SearchEmptyIcon,
+  IconWrapper,
+  CustomApiBanner,
+  CustomApiBannerText,
+  CustomApiBannerTitle,
+  CustomApiBannerSubtitle
 } from './styles';
 
 const getCardRarity = (card: CardData): 'UR' | 'SR' | 'R' | 'N' => {
     if (!card.card_sets) return 'N';
     
     const sets = card.card_sets;
-    // UR / Secret / Prismatic / Ultimate / Ghost -> UR
     const hasUR = sets.some(s => 
         s.set_rarity.includes('Ultra') || 
         s.set_rarity.includes('Secret') || 
@@ -72,11 +99,9 @@ const getCardRarity = (card: CardData): 'UR' | 'SR' | 'R' | 'N' => {
     );
     if (hasUR) return 'UR';
 
-    // Super -> SR
     const hasSR = sets.some(s => s.set_rarity.includes('Super'));
     if (hasSR) return 'SR';
 
-    // Rare -> R
     const hasR = sets.some(s => s.set_rarity.includes('Rare')); 
     if (hasR) return 'R';
 
@@ -103,21 +128,78 @@ export const DeckBuilder = () => {
     const [showAI, setShowAI] = useState(false);
     const [loadingDeck, setLoadingDeck] = useState(false);
     const [isAiLoading, setIsAiLoading] = useState(false);
-    const [aiResult, setAiResult] = useState<{summary: string, usage_moments: string[]} | null>(null);
+    const [aiResult, setAiResult] = useState<AiCardResponse | null>(null);
     const [showAiModal, setShowAiModal] = useState(false);
     const [showHandModal, setShowHandModal] = useState(false);
+    const [showUpgradeModal, setShowUpgradeModal] = useState(false);
     
-    // New AI Analysis State
     const [deckAnalysis, setDeckAnalysis] = useState<AiDeckResponse | null>(null);
     const [isAnalyzing, setIsAnalyzing] = useState(false);
+    const [analysisUsage, setAnalysisUsage] = useState({ used: 0, limit: 10 });
     
-    // Calculate CP Cost
+    const [userPlan, setUserPlan] = useState<'free' | 'premium'>('free');
+
+    // Real-time Usage & Plan Update
+    useEffect(() => {
+        if (!user) return;
+
+        const subUnsubscribe = onSnapshot(doc(db, 'users', user.uid), (doc) => {
+             const data = doc.data();
+             setUserPlan(data?.subscription?.plan || 'free'); 
+        });
+
+        const unsubscribe = onSnapshot(doc(db, 'users', user.uid, 'usage', 'deck_analysis'), (doc) => {
+            if (doc.exists()) {
+                const data = doc.data();
+                const today = new Date().toISOString().split('T')[0];
+                if (data.date === today) {
+                    setAnalysisUsage(prev => ({ ...prev, used: data.count || 0 }));
+                } else {
+                    setAnalysisUsage(prev => ({ ...prev, used: 0 }));
+                }
+            } else {
+                setAnalysisUsage(prev => ({ ...prev, used: 0 }));
+            }
+        });
+
+        return () => { unsubscribe(); subUnsubscribe(); };
+    }, [user]);
+    
     const urCost = [...mainDeck, ...extraDeck].filter(c => getCardRarity(c) === 'UR').length * 30;
     const srCost = [...mainDeck, ...extraDeck].filter(c => getCardRarity(c) === 'SR').length * 30;
 
     const { showModal } = useModal();
     const { playAddSound, playRemoveSound } = useSoundEffects();
+
+    const fetchAnalysisUsage = async () => {
+        if (!user) return;
+        const usage = await getDeckAnalysisUsage(user.uid);
+        setAnalysisUsage(usage);
+    };
+
+    useEffect(() => {
+        if (showAI && user) {
+            fetchAnalysisUsage();
+        }
+    }, [showAI, user]);
+
+    // Clear cached analysis when deck composition changes
+    // Using JSON of sorted IDs to detect any card addition/removal/swap
+    const deckSignature = JSON.stringify([...mainDeck, ...extraDeck].map(c => c.id).sort());
+    useEffect(() => {
+        setDeckAnalysis(null);
+    }, [deckSignature]);
+
     const handleDeckAnalysis = async () => {
+        if (!user) {
+            showModal({
+                title: 'Login Necessário',
+                message: 'Você precisa estar logado para usar a análise de IA.',
+                type: 'info'
+            });
+            return;
+        }
+
         if (mainDeck.length < 40) {
             showModal({
                 title: 'Deck Incompleto',
@@ -129,56 +211,154 @@ export const DeckBuilder = () => {
         const allCards = mainDeck.concat(extraDeck);
         if (allCards.length === 0) return;
         
+        setShowAI(true); 
         setIsAnalyzing(true);
+        setDeckAnalysis(null);
+
         try {
             const cardIds = allCards.map(c => c.id);
             
-            // Generate list like ["3x Ash Blossom", "1x Nibiru"]
             const nameMap = new Map<string, number>();
             allCards.forEach(c => {
                nameMap.set(c.name, (nameMap.get(c.name) || 0) + 1);
             });
             const deckListForAi = Array.from(nameMap.entries()).map(([name, count]) => `${count}x ${name}`);
 
-            const result = await analyzeDeckWithCache(cardIds, deckListForAi);
+            // forceRefresh: true because user explicitly clicked to generate new analysis
+            const result = await analyzeDeckWithCache(cardIds, deckListForAi, true);
             setDeckAnalysis(result);
+
         } catch (error: any) {
             console.error("AI Analysis Failed", error);
             
-            // Detect timeout or API issues
+            const errCode = error.response?.data?.error || error.message;
+
+            if (errCode === 'LIMIT_REACHED') {
+                if (userPlan === 'free') {
+                    setShowUpgradeModal(true);
+                } else {
+                    showModal({ title: 'Limite Atingido', message: 'Limite diário de decks atingido.', type: 'info' });
+                }
+                setShowAI(false);
+                return;
+            }
+
+            if (error.response?.status === 404) {
+                 setDeckAnalysis(null);
+                 return;
+            }
+
             const isTimeout = error.code === 'ECONNABORTED' || error.message?.includes('timeout');
             const isServerError = error.response?.status >= 500;
             
             if (isTimeout || isServerError) {
                 showModal({
                     title: '⚠️ Serviço Temporariamente Indisponível',
-                    message: 'A API do Google Gemini está enfrentando instabilidade no momento. Isso é temporário e não é um problema do Handtrap.\n\nTente novamente em alguns minutos ou aguarde a normalização do serviço.',
+                    message: 'A API do Google Gemini está enfrentando instabilidade no momento.',
                     type: 'warning'
                 });
             } else {
                 showModal({
                     title: 'Erro de Análise',
-                    message: 'Falha ao analisar deck. Tente novamente mais tarde.',
+                    message: 'Falha ao buscar análise. Tente novamente.',
                     type: 'error'
                 });
             }
+            setShowAI(false);
+        } finally {
+            setIsAnalyzing(false);
+        }
+    };
+
+    useEffect(() => {
+        if (showAI && !deckAnalysis && !isAnalyzing && user) {
+            const checkCommunityAnalysis = async () => {
+                const allCards = mainDeck.concat(extraDeck);
+                if (allCards.length < 40) return;
+
+                setIsAnalyzing(true);
+                try {
+                     const cardIds = allCards.map(c => c.id);
+                     const { checkDeckAnalysisCache } = await import('../../services/aiAnalysisService');
+                     const cachedAnalysis = await checkDeckAnalysisCache(cardIds);
+
+                     if (cachedAnalysis) {
+                         setDeckAnalysis(cachedAnalysis);
+                     }
+                } catch (e) {
+                    console.error("Auto-check failed", e);
+                } finally {
+                    setIsAnalyzing(false);
+                }
+            };
+            checkCommunityAnalysis();
+        }
+    }, [showAI, mainDeck, extraDeck, user]);
+
+    const handleForceRefresh = async () => {
+        if (!user) return;
+        const allCards = mainDeck.concat(extraDeck);
+        
+        setIsAnalyzing(true);
+        try {
+             const cardIds = allCards.map(c => c.id);
+             const nameMap = new Map<string, number>();
+             allCards.forEach(c => nameMap.set(c.name, (nameMap.get(c.name) || 0) + 1));
+             const deckListForAi = Array.from(nameMap.entries()).map(([name, count]) => `${count}x ${name}`);
+
+             const result = await analyzeDeckWithCache(cardIds, deckListForAi, true);
+             setDeckAnalysis(result);
+             await fetchAnalysisUsage();
+        } catch (error: any) {
+             const errCode = error.response?.data?.error || error.message;
+             if (errCode === "LIMIT_REACHED") {
+                 if (userPlan === 'free') {
+                     setShowUpgradeModal(true);
+                 } else {
+                     showModal({ title: 'Limite Atingido', message: 'Limite diário de decks atingido.', type: 'info' });
+                 }
+             } else {
+                 showModal({
+                     title: 'Erro na Análise',
+                     message: error.message || 'Falha ao atualizar análise.',
+                     type: 'error'
+                 });
+             }
         } finally {
             setIsAnalyzing(false);
         }
     };
 
     const handleAiAnalysis = async (cardName: string) => {
+        if (!user) {
+            showModal({
+                title: 'Login Necessário',
+                message: 'Você precisa estar logado para analisar cartas.',
+                type: 'info'
+            });
+            return;
+        }
+
         setIsAiLoading(true);
         setShowAiModal(true);
-        setAiResult(null); // Reset previous result
+        setAiResult(null);
         try {
             const result = await analyzeCardWithCache(cardName);
             setAiResult(result);
         } catch (error: any) {
             console.error(error);
-            setShowAiModal(false); // Close loading modal
+            setShowAiModal(false);
             
-            // Detect timeout or API issues
+            const errCode = error.response?.data?.error || error.message;
+            if (errCode === 'LIMIT_REACHED') {
+                if (userPlan === 'free') {
+                    setShowUpgradeModal(true);
+                } else {
+                     showModal({ title: 'Limite Atingido', message: 'Limite diário de cartas atingido.', type: 'info' });
+                }
+                return;
+            }
+            
             const isTimeout = error.code === 'ECONNABORTED' || error.message?.includes('timeout');
             const isServerError = error.response?.status >= 500;
             
@@ -207,7 +387,6 @@ export const DeckBuilder = () => {
         });
     };
 
-    // Load deck if ID is present
     useEffect(() => {
         const loadDeckData = async () => {
              if (!deckId) return;
@@ -217,15 +396,8 @@ export const DeckBuilder = () => {
                  if (deck) {
                      setDeckName(deck.name);
                      
-                     const allIds = [...deck.cards.main, ...deck.cards.extra];
-                     const allCards = await fetchCardsByIds(allIds);
-                     const allMap = new Map(allCards.map(c => [c.id, c]));
-                     
-                     const finalMain = deck.cards.main.map(id => allMap.get(id)).filter(Boolean) as CardData[];
-                     const finalExtra = deck.cards.extra.map(id => allMap.get(id)).filter(Boolean) as CardData[];
-                     
-                     setMainDeck(sortCardsByName(finalMain));
-                     setExtraDeck(sortCardsByName(finalExtra));
+                     setMainDeck(sortCardsByName(deck.cards.main));
+                     setExtraDeck(sortCardsByName(deck.cards.extra));
                  }
              } catch (error) {
                  console.error("Failed to load deck", error);
@@ -236,11 +408,9 @@ export const DeckBuilder = () => {
         loadDeckData();
     }, [deckId]);
 
-    // Filter Search on type
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const val = e.target.value;
         setSearchTerm(val);
-        // Instant local search
         searchCards(val);
     };
 
@@ -255,26 +425,22 @@ export const DeckBuilder = () => {
     const handleAddToDeck = (card: CardData) => {
         const isExtra = isExtraDeckType(card);
         
-        // 1. Check Copy Limit (Max 3 of same ID per DECK)
         const countInMain = mainDeck.filter(c => c.id === card.id).length;
         const countInExtra = extraDeck.filter(c => c.id === card.id).length;
         const totalCopies = countInMain + countInExtra;
         
         if (totalCopies >= 3) {
-            // Silently fail
             return;
         }
 
         if (isExtra) {
             if (extraDeck.length >= 15) {
-                // Limit reached
                 return;
             }
             setExtraDeck(prev => sortCardsByName([...prev, card]));
             playAddSound();
         } else {
-            if (mainDeck.length >= 40) { // Limit strictly to 40
-                 // Limit reached
+            if (mainDeck.length >= 40) {
                  return;
             }
             setMainDeck(prev => sortCardsByName([...prev, card]));
@@ -300,6 +466,90 @@ export const DeckBuilder = () => {
         }
     };
 
+    const handleShareDeck = () => {
+        if (mainDeck.length === 0 && extraDeck.length === 0) {
+            showModal({ title: 'Deck Vazio', message: 'Adicione cartas antes de compartilhar.', type: 'info' });
+            return;
+        }
+
+        try {
+            const code = encodeDeck(mainDeck, extraDeck);
+            const url = `${window.location.origin}${window.location.pathname}?import=${code}`;
+            
+            navigator.clipboard.writeText(url);
+            showModal({
+                title: 'Link Copiado!',
+                message: 'O link do deck foi copiado para sua área de transferência. Compartilhe com quem quiser!',
+                type: 'success'
+            });
+        } catch (e) {
+            console.error("Share error", e);
+            showModal({ title: 'Erro', message: 'Falha ao gerar link.', type: 'error' });
+        }
+    };
+
+    const { hydrateMissingCards, cardMap } = useCardDatabase();
+    useEffect(() => {
+        const importCode = searchParams.get('import');
+        if (!importCode) return;
+
+        const loadImportedDeck = async () => {
+            setLoadingDeck(true);
+            try {
+                const { main: mainIds, extra: extraIds } = decodeDeck(importCode);
+                
+                if (mainIds.length === 0 && extraIds.length === 0) {
+                    throw new Error("Invalid Code");
+                }
+
+                const allIds = [...new Set([...mainIds, ...extraIds])];
+                await hydrateMissingCards(allIds);
+
+                setDeckName("Deck Compartilhado");
+                setSearchParams({}, { replace: true });
+                
+                setPendingImport({ main: mainIds, extra: extraIds });
+
+            } catch (e) {
+                console.error("Import error", e);
+                showModal({ title: 'Erro na Importação', message: 'O código do deck é inválido ou está corrompido.', type: 'error' });
+            } finally {
+                setLoadingDeck(false);
+            }
+        };
+        loadImportedDeck();
+    }, [searchParams]);
+
+    const [pendingImport, setPendingImport] = useState<{main: number[], extra: number[]} | null>(null);
+
+    useEffect(() => {
+        if (!pendingImport) return;
+        
+        const { main, extra } = pendingImport;
+        const resolvedMain: CardData[] = [];
+        const resolvedExtra: CardData[] = [];
+        let missing = false;
+
+        main.forEach(id => {
+            const card = cardMap.get(id);
+            if (card) resolvedMain.push(card);
+            else missing = true;
+        });
+        
+        extra.forEach(id => {
+            const card = cardMap.get(id);
+            if (card) resolvedExtra.push(card);
+            else missing = true;
+        });
+
+        if (!missing) {
+             setMainDeck(resolvedMain);
+             setExtraDeck(resolvedExtra);
+             setPendingImport(null); 
+             showModal({ title: 'Deck Importado', message: 'Deck carregado com sucesso via link!', type: 'success' });
+        }
+    }, [pendingImport, cardMap]);
+
     const handleSave = async () => {
         if (!user) {
             showModal({
@@ -310,21 +560,19 @@ export const DeckBuilder = () => {
             return;
         }
         try {
-            const savedId = await saveDeck({
-                id: deckId || undefined, // Pass existing ID if any
+            const savedId = await saveDeck(user.uid, {
+                id: deckId || undefined, 
                 authorName: user.displayName || 'Duelist',
-                authorId: user.uid,
                 name: deckName,
                 isPublic: false,
                 cards: {
-                    main: mainDeck.map(c => c.id),
-                    extra: extraDeck.map(c => c.id)
+                    main: mainDeck,
+                    extra: extraDeck
                 },
                 deckHash: '', 
             });
             
             if (!deckId) {
-                // If it was a new deck, set the ID so future saves are updates
                 setSearchParams({ id: savedId });
             }
             showModal({
@@ -342,21 +590,47 @@ export const DeckBuilder = () => {
         }
     };
 
+    const [cardUsage, setCardUsage] = useState({ used: 0, limit: 5 });
 
+    // Fetch card usage limits on mount and real-time
+    useEffect(() => {
+        if (!user) return;
+        
+        const loadInitial = async () => {
+             const { getCardAnalysisUsage } = await import('../../services/usersService');
+             const data = await getCardAnalysisUsage(user.uid);
+             setCardUsage(data);
+        };
+        loadInitial();
+
+        const unsubscribe = onSnapshot(doc(db, 'users', user.uid, 'usage', 'card_analysis'), (docSnap) => {
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                const today = new Date().toISOString().split('T')[0];
+                if (data.date === today) {
+                    setCardUsage(prev => ({ ...prev, used: data.count || 0 }));
+                } else {
+                    setCardUsage(prev => ({ ...prev, used: 0 }));
+                }
+            }
+        });
+        return () => unsubscribe();
+    }, [user]);
+
+    const isCardLimitReached = cardUsage.used >= cardUsage.limit;
 
     const renderCardDetails = () => {
         if (!selectedCard) {
             return (
                 <NoSelectionInfo>
-                    <div>
-                        <Box size={48} style={{opacity:0.5}} />
-                    </div>
-                    <h3 style={{color: 'white', marginBottom: '0.5rem', fontSize: '1.2rem'}}>Nenhuma Carta Selecionada</h3>
-                    <p style={{fontSize: '0.9rem'}}>Clique em uma carta para ver detalhes.</p>
+                    <IconWrapper>
+                        <Box size={48} />
+                    </IconWrapper>
+                    <h3>Nenhuma Carta Selecionada</h3>
+                    <p>Clique em uma carta para ver detalhes.</p>
                 </NoSelectionInfo>
             );
         }
-        // Use local image util
         const imgUrl = getCardImageUrl(selectedCard.id);
 
         return (
@@ -371,10 +645,6 @@ export const DeckBuilder = () => {
                     </CardImageContainer>
 
                     <CardTitle>{selectedCard.name}</CardTitle>
-                    
-
-
-
 
                     <TagsContainer>
                     {selectedCard.attribute && <Tag $color="#d97706">{selectedCard.attribute}</Tag>}
@@ -401,9 +671,13 @@ export const DeckBuilder = () => {
                         {selectedCard.desc}
                     </DescriptionBox>
 
-                    <AiButton onClick={() => handleAiAnalysis(selectedCard.name)} disabled={isAiLoading}>
+                    <AiButton 
+                        onClick={() => handleAiAnalysis(selectedCard.name)} 
+                        disabled={isAiLoading || isCardLimitReached}
+                        title={isCardLimitReached ? 'Limite diário atingido' : 'Analisar carta com IA'}
+                    >
                         <Sparkles size={18} />
-                        {isAiLoading ? 'ANALISANDO...' : 'ANALISAR CARD'}
+                        {isAiLoading ? 'ANALISANDO...' : isCardLimitReached ? 'LIMITE ATINGIDO' : `ANALISAR (${cardUsage.used}/${cardUsage.limit})`}
                     </AiButton>
                 </DetailContent>
 
@@ -411,79 +685,45 @@ export const DeckBuilder = () => {
                     <ModalOverlay onClick={() => setShowAiModal(false)}>
                         <ModalContent onClick={e => e.stopPropagation()}>
                             <ModalHeader>
-                                <h3><BrainCircuit size={20} style={{display:'inline', marginRight:'8px'}}/> Análise Tática</h3>
+                                <h3><BrainCircuit size={20} /> Análise Tática</h3>
                                 <CloseButton onClick={() => setShowAiModal(false)}><X size={20}/></CloseButton>
                             </ModalHeader>
                             <ModalBody>
                                 {isAiLoading ? (
-                                    <div style={{textAlign: 'center', padding: '3rem', color: '#94a3b8'}}>
-                                        <Sparkles className="animate-spin" size={48} style={{marginBottom: '1rem', color: 'var(--accent-color)'}}/>
-                                        <p style={{fontSize: '1.1rem', letterSpacing: '0.05em'}}>Consultando  Oráculo...</p>
-                                    </div>
+                                    <AiLoader message="Analisando esta Carta..." />
                                 ) : aiResult ? (
                                     <>
-                                        <div style={{marginBottom: '2rem'}}>
-                                            <div style={{
-                                                fontSize: '0.8rem', 
-                                                textTransform: 'uppercase', 
-                                                color: '#94a3b8', 
-                                                letterSpacing: '0.1em',
-                                                marginBottom: '0.8rem',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                gap: '8px'
-                                            }}>
+                                        {aiResult.source === 'custom' && (
+                                            <CustomApiBanner>
+                                                <Key size={18} />
+                                                <CustomApiBannerText>
+                                                    <CustomApiBannerTitle>
+                                                        Análise via API Personalizada ({getCustomApiConfig()?.provider?.toUpperCase() || 'Custom'})
+                                                    </CustomApiBannerTitle>
+                                                    <CustomApiBannerSubtitle>
+                                                        Usando sua própria chave de API. Não consome créditos.
+                                                    </CustomApiBannerSubtitle>
+                                                </CustomApiBannerText>
+                                            </CustomApiBanner>
+                                        )}
+                                        <AiSummarySection>
+                                            <AiSummaryTitle>
                                                 <BrainCircuit size={14} /> Resumo Estratégico
-                                            </div>
-                                            <p style={{
-                                                fontSize: '1rem',
-                                                lineHeight: '1.7',
-                                                color: '#e2e8f0',
-                                                padding: '1.5rem',
-                                                background: 'rgba(255,255,255,0.03)',
-                                                borderRadius: '12px',
-                                                border: '1px solid rgba(255,255,255,0.05)',
-                                                borderLeft: '4px solid var(--primary-color)'
-                                            }}>{aiResult.summary}</p>
-                                        </div>
+                                            </AiSummaryTitle>
+                                            <AiSummaryContent>{aiResult.summary}</AiSummaryContent>
+                                        </AiSummarySection>
                                         <div>
-                                            <div style={{
-                                                fontSize: '0.8rem', 
-                                                textTransform: 'uppercase', 
-                                                color: '#94a3b8', 
-                                                letterSpacing: '0.1em',
-                                                marginBottom: '1rem',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                gap: '8px'
-                                            }}>
+                                            <AiSummaryTitle>
                                                 <Sparkles size={14} /> Melhores Momentos de Uso
-                                            </div>
-                                            <ul style={{display: 'flex', flexDirection: 'column', gap: '0.8rem'}}>
+                                            </AiSummaryTitle>
+                                            <UsageList>
                                                 {aiResult.usage_moments.map((moment, idx) => (
-                                                    <li key={idx} style={{
-                                                        background: 'linear-gradient(90deg, rgba(255,255,255,0.03) 0%, transparent 100%)',
-                                                        padding: '1rem 1.2rem',
-                                                        borderRadius: '8px',
-                                                        border: '1px solid rgba(255,255,255,0.05)',
-                                                        fontSize: '0.95rem',
-                                                        display: 'flex',
-                                                        gap: '12px',
-                                                        alignItems: 'center',
-                                                        transition: 'transform 0.2s',
-                                                        cursor: 'default'
-                                                    }}>
-                                                        <span style={{
-                                                            color: 'var(--primary-color)', 
-                                                            fontWeight: '900', 
-                                                            fontFamily: 'var(--font-heading)',
-                                                            fontSize: '1.1rem',
-                                                            opacity: 0.8
-                                                        }}>0{idx + 1}</span>
-                                                        <span style={{color: '#cbd5e1'}}>{moment}</span>
-                                                    </li>
+                                                    <UsageListItem key={idx}>
+                                                        <UsageNumber>0{idx + 1}</UsageNumber>
+                                                        <UsageText>{moment}</UsageText>
+                                                    </UsageListItem>
                                                 ))}
-                                            </ul>
+                                            </UsageList>
                                         </div>
                                     </>
                                 ) : null}
@@ -500,10 +740,10 @@ export const DeckBuilder = () => {
         return (
             <PageWrapper>
                 <Header />
-                <div style={{display:'flex', justifyContent:'center', alignItems:'center', height:'100%', color:'white'}}>
-                    <Loader2 className="animate-spin" size={32} style={{marginRight: 12}} />
+                <LoadingContainer>
+                    <Loader2 className="animate-spin" size={32} />
                     Loading Deck...
-                </div>
+                </LoadingContainer>
             </PageWrapper>
         );
     }
@@ -526,38 +766,43 @@ export const DeckBuilder = () => {
                             onChange={e => setDeckName(e.target.value)} 
                        />
 
-                       <div style={{display:'flex', gap:'0.8rem'}}>
-                        <div style={{display: 'flex', alignItems: 'center', gap: '6px', background: 'rgba(0,0,0,0.3)', padding: '4px 10px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)'}}>
-                               <img src={cpurIcon} alt="UR CP" style={{width: '20px', height: '20px'}} />
-                               <span style={{color: '#fde0ffff', fontWeight: 'bold', fontSize: '0.9rem'}}>{urCost}</span>
-                           </div>
-                           <div style={{display: 'flex', alignItems: 'center', gap: '6px', background: 'rgba(0,0,0,0.3)', padding: '4px 10px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)'}}>
-                               <img src={cpsrIcon} alt="SR CP" style={{width: '20px', height: '20px'}} />
-                               <span style={{color: '#cbd5e1', fontWeight: 'bold', fontSize: '0.9rem'}}>{srCost}</span>
-                           </div>
+                       <HeaderActions>
+                        <CPContainer>
+                               <img src={cpurIcon} alt="UR CP" />
+                               <CPValueUR>{urCost}</CPValueUR>
+                           </CPContainer>
+                           <CPContainer>
+                               <img src={cpsrIcon} alt="SR CP" />
+                               <CPValueSR>{srCost}</CPValueSR>
+                           </CPContainer>
                            <ActionButton $variant="secondary" onClick={() => setShowHandModal(true)}>
                                <Dices size={16} />
                                Mão
                            </ActionButton>
                            <ActionButton $variant="secondary" onClick={() => setShowAI(!showAI)}>
-                               <Sparkles size={16} className={showAI ? "text-yellow-400" : ""} />
-                               {showAI ? 'IA' : 'IA'}
+                               <Sparkles size={16} />
+                               IA
+                           </ActionButton>
+                           <ActionButton $variant="secondary" onClick={handleShareDeck} title="Compartilhar Link do Deck">
+                               <Share2 size={16} />
                            </ActionButton>
                            <ActionButton $variant="primary" onClick={handleSave}>
                                <Save size={16} />
                                Salvar
                            </ActionButton>
-                       </div>
+                       </HeaderActions>
                     </ColumnHeader>
 
                     {showAI ? (
                         <AIContainer>
                             <AiAnalysisPanel 
-                                onAnalyze={handleDeckAnalysis}
+                                onAnalyze={handleDeckAnalysis} 
+                                onForceAnalyze={handleForceRefresh}
                                 isLoading={isAnalyzing}
                                 result={deckAnalysis}
                                 isDisabled={(mainDeck.length + extraDeck.length) === 0}
                                 onClose={() => setShowAI(false)}
+                                usageLimit={analysisUsage}
                             />
                         </AIContainer>
                     ) : (
@@ -565,9 +810,9 @@ export const DeckBuilder = () => {
                             <DeckSection>
                                 <SectionLabel>
                                     <span>Deck Principal</span>
-                                    <span style={{color: mainDeck.length >= 40 ? 'var(--success-color)' : 'var(--text-secondary)'}}>
+                                    <DeckCount $isComplete={mainDeck.length >= 40}>
                                         {mainDeck.length} / 40
-                                    </span>
+                                    </DeckCount>
                                 </SectionLabel>
                                 <CardGrid>
                                     {mainDeck.map((card, idx) => {
@@ -628,22 +873,22 @@ export const DeckBuilder = () => {
                                 />
                             </SearchRowInner>
                             <small>
-                                 <Info size={14} style={{marginRight:4}}/>
+                                 <Info size={14} />
                                  {searchTerm ? `Resultados para "${searchTerm}"` : "Principais Staples"}
                             </small>
                         </SearchInputRow>
                         
                         {searchLoading ? (
-                            <div style={{padding:'2rem', display:'flex', justifyContent:'center', alignItems: 'center', flex: 1}}>
+                            <SearchLoadingState>
                                 <Loader2 className="animate-spin" size={48} color="var(--primary-color)" />
-                            </div>
+                            </SearchLoadingState>
                         ) : (
                             <CatalogGrid>
                                 {searchResults.length === 0 && searchTerm ? (
-                                    <div style={{gridColumn:'1/-1', textAlign:'center', padding:'3rem', color:'var(--text-secondary)'}}>
-                                        <div style={{marginBottom: '1rem', fontSize: '2rem'}}>🔍</div>
+                                    <SearchEmptyState>
+                                        <SearchEmptyIcon>🔍</SearchEmptyIcon>
                                         Nenhuma carta encontrada.
-                                    </div>
+                                    </SearchEmptyState>
                                 ) : null}
 
                                 {searchResults.map(card => {
@@ -669,7 +914,13 @@ export const DeckBuilder = () => {
                 isOpen={showHandModal} 
                 onClose={() => setShowHandModal(false)} 
                 deck={mainDeck} 
+                extraDeck={extraDeck}
+            />
+            <UpgradeModal 
+                isOpen={showUpgradeModal} 
+                onClose={() => setShowUpgradeModal(false)} 
             />
         </PageWrapper>
     );
 };
+

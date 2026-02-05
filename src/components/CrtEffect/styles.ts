@@ -29,7 +29,7 @@ const scanline = keyframes`
   100% { transform: translateY(100%); }
 `;
 
-const Overlay = styled.div`
+export const Overlay = styled.div`
   position: fixed;
   top: 0;
   left: 0;
@@ -75,7 +75,3 @@ const Overlay = styled.div`
     pointer-events: none;
   }
 `;
-
-export const CrtEffect = () => {
-    return <Overlay />;
-};

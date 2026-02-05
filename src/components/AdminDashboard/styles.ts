@@ -75,11 +75,15 @@ export const StatsGrid = styled.div`
   }
 `;
 
-export const StatCard = styled.div<{ $type: 'system' | 'external' }>`
+export const StatCard = styled.div<{ $type: 'system' | 'external' | 'cost' }>`
   background: linear-gradient(145deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
   padding: 1.5rem;
   border-radius: 12px;
-  border: 1px solid ${props => props.$type === 'system' ? 'rgba(59, 130, 246, 0.3)' : 'rgba(236, 72, 153, 0.3)'};
+  border: 1px solid ${props => {
+    if (props.$type === 'system') return 'rgba(59, 130, 246, 0.3)';
+    if (props.$type === 'cost') return 'rgba(16, 185, 129, 0.3)';
+    return 'rgba(236, 72, 153, 0.3)';
+  }};
   position: relative;
   overflow: hidden;
 
@@ -90,7 +94,11 @@ export const StatCard = styled.div<{ $type: 'system' | 'external' }>`
     left: 0;
     width: 100%;
     height: 4px;
-    background: ${props => props.$type === 'system' ? '#3b82f6' : '#ec4899'};
+    background: ${props => {
+      if (props.$type === 'system') return '#3b82f6';
+      if (props.$type === 'cost') return '#10b981';
+      return '#ec4899';
+    }};
   }
 `;
 

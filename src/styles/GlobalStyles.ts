@@ -7,8 +7,8 @@ export const GlobalStyles = createGlobalStyle`
     --bg-secondary: #0f172a;
     --surface-color: #1e293b;
     
-    --primary-color: #3b82f6;
-    --accent-color: #60a5fa; 
+    --primary-color: #a855f7;
+    --accent-color: #a855f7; 
     
     --text-primary: #ffffff;
     --text-secondary: #94a3b8;

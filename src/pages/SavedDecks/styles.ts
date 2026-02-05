@@ -35,6 +35,29 @@ export const Title = styled.h1`
   }
 `;
 
+export const ActionsWrapper = styled.div`
+  display: flex;
+  gap: 12px;
+  align-items: center;
+`;
+
+export const WarningBanner = styled.div`
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: rgba(234, 179, 8, 0.1);
+  border: 1px solid rgba(234, 179, 8, 0.2);
+  border-radius: 8px;
+  color: #fefce8;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+`;
+
+export const WarningIcon = styled.span`
+  font-size: 1.2rem;
+`;
+
 export const DecksGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -204,5 +227,51 @@ export const CreateButton = styled.button`
   &:hover {
     transform: translateY(-2px);
     box-shadow: none; /* Removed glow */
+  }
+`;
+
+export const ImportWrapper = styled.div`
+  display: flex;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  overflow: hidden;
+  height: 46px; /* Match typical button height with 0.8rem padding */
+  align-items: stretch;
+  transition: border-color 0.2s;
+
+  &:focus-within {
+    border-color: var(--primary-color);
+  }
+`;
+
+export const ImportInput = styled.input`
+  background: transparent;
+  border: none;
+  color: white;
+  padding: 0 1rem;
+  outline: none;
+  min-width: 250px;
+  font-size: 0.95rem;
+
+  &::placeholder {
+    color: var(--text-secondary);
+  }
+`;
+
+export const ImportButton = styled.button`
+  background: ${props => props.disabled ? '#334155' : 'var(--primary-color)'};
+  color: ${props => props.disabled ? '#94a3b8' : 'white'};
+  border: none;
+  padding: 0 1.2rem;
+  cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
+
+  &:hover:not(:disabled) {
+    background: #2563eb;
   }
 `;

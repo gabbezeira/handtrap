@@ -1,8 +1,13 @@
 import { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
-import { LogOut, FolderOpen, ChevronDown } from 'lucide-react';
+import { LogOut, FolderOpen, ChevronDown, Settings } from 'lucide-react';
+import { FaGem, FaCrown } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { MusicSettings } from '../MusicSettings';
+import { SettingsModal } from '../SettingsModal';
+import { UpgradeModal } from '../UpgradeModal';
+import { db } from '../../firebase/config';
+import { doc, onSnapshot } from 'firebase/firestore';
 import {
   HeaderContainer,
   Logo,
@@ -12,14 +17,21 @@ import {
   UserName,
   Dropdown,
   MenuItem,
-//   ThemeToggleButton
+  RightSection,
+  DropdownLabel,
+  MenuItemDanger,
+  ChevronWrapper,
+  PremiumButton,
+  PremiumBadge
 } from './styles';
 
 export const Header = () => {
     const { user, logout } = useAuth();
-    // const { currentTheme, toggleTheme } = useTheme();
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
+    const [showSettings, setShowSettings] = useState(false);
+    const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+    const [subscription, setSubscription] = useState<{plan: string, status: string} | null>(null);
     const containerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -32,6 +44,19 @@ export const Header = () => {
         return () => document.removeEventListener('mousedown', handleClick);
     }, []);
 
+    useEffect(() => {
+        if (!user) return;
+        
+        const unsubscribe = onSnapshot(doc(db, 'users', user.uid), (docSnap) => {
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                setSubscription(data.subscription || { plan: 'free', status: 'active' });
+            }
+        });
+        
+        return () => unsubscribe();
+    }, [user]);
+
     const handleLogout = async () => {
         try {
             await logout();
@@ -41,42 +66,73 @@ export const Header = () => {
         }
     };
 
+    const isPremium = subscription?.plan === 'premium' && subscription?.status === 'active';
+
     return (
-        <HeaderContainer>
-            <Logo onClick={() => navigate('/decks')}>
-                Hand<span>trap</span>
-            </Logo>
+        <>
+            <HeaderContainer>
+                <Logo onClick={() => navigate('/decks')}>
+                    Hand<span>trap</span>
+                </Logo>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <MusicSettings />
+                <RightSection>
+                    {user && (
+                        <>
+                            {isPremium ? (
+                                <PremiumBadge>
+                                    <FaCrown size={14} /> Membro Premium
+                                </PremiumBadge>
+                            ) : (
+                                <PremiumButton onClick={() => setShowUpgradeModal(true)}>
+                                    <FaGem size={14} /> Seja Premium
+                                </PremiumButton>
+                            )}
+                        </>
+                    )}
 
-                {user && (
-                    <UserArea ref={containerRef}>
-                        <UserButton onClick={() => setIsOpen(!isOpen)}>
-                            <Avatar 
-                                src={user.photoURL || `https://ui-avatars.com/api/?name=${user.email}&background=0D8ABC&color=fff`} 
-                                alt="User" 
-                            />
-                            <UserName>{user.displayName || user.email?.split('@')[0]}</UserName>
-                            <ChevronDown size={14} style={{opacity: 0.5}} />
-                        </UserButton>
+                    <MusicSettings />
 
-                        <Dropdown $isOpen={isOpen}>
-                            <div style={{padding: '0 0.5rem 0.5rem', borderBottom: '1px solid rgba(255,255,255,0.05)', marginBottom: '0.5rem', fontSize: '0.75rem', color: '#94a3b8', letterSpacing: '0.05em'}}>
-                                CONTA
-                            </div>
-                            <MenuItem onClick={() => { setIsOpen(false); navigate('/decks'); }}>
-                                <FolderOpen size={18} />
-                                Meus Decks
-                            </MenuItem>
-                            <MenuItem onClick={handleLogout} style={{color: '#ef4444'}}>
-                                <LogOut size={18} />
-                                Sair
-                            </MenuItem>
-                        </Dropdown>
-                    </UserArea>
-                )}
-            </div>
-        </HeaderContainer>
+                    {user && (
+                        <UserArea ref={containerRef}>
+                            <UserButton onClick={() => setIsOpen(!isOpen)}>
+                                <Avatar 
+                                    src={user.photoURL || `https://ui-avatars.com/api/?name=${user.email}&background=0D8ABC&color=fff`} 
+                                    alt="User" 
+                                />
+                                <UserName>{user.displayName || user.email?.split('@')[0]}</UserName>
+                                <ChevronWrapper><ChevronDown size={14} /></ChevronWrapper>
+                            </UserButton>
+
+                            <Dropdown $isOpen={isOpen}>
+                                <DropdownLabel>
+                                    CONTA
+                                </DropdownLabel>
+                                <MenuItem onClick={() => { setIsOpen(false); navigate('/decks'); }}>
+                                    <FolderOpen size={18} />
+                                    Meus Decks
+                                </MenuItem>
+                                <MenuItem onClick={() => { setIsOpen(false); setShowSettings(true); }}>
+                                    <Settings size={18} />
+                                    Configurações
+                                </MenuItem>
+                                <MenuItemDanger onClick={handleLogout}>
+                                    <LogOut size={18} />
+                                    Sair
+                                </MenuItemDanger>
+                            </Dropdown>
+                        </UserArea>
+                    )}
+                </RightSection>
+            </HeaderContainer>
+
+            <SettingsModal 
+                isOpen={showSettings} 
+                onClose={() => setShowSettings(false)} 
+            />
+            <UpgradeModal 
+                isOpen={showUpgradeModal} 
+                onClose={() => setShowUpgradeModal(false)}
+            />
+        </>
     );
 };
