@@ -13,6 +13,16 @@ export const HeaderContainer = styled.header`
   top: 0;
   z-index: 100;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+
+  @media (max-width: 900px) {
+    height: 55px;
+    padding: 0 1rem;
+  }
+
+  @media (max-width: 768px) {
+    height: 50px;
+    padding: 0 0.8rem;
+  }
 `;
 
 export const Logo = styled.div`
@@ -26,8 +36,6 @@ export const Logo = styled.div`
   letter-spacing: 0.1em;
   cursor: pointer;
   font-family: var(--font-heading);
-  font-family: var(--font-heading);
-  
   
   span {
     color: #a855f7;
@@ -35,6 +43,19 @@ export const Logo = styled.div`
   
   &:hover {
     filter: brightness(1.2);
+  }
+
+  @media (max-width: 900px) {
+    font-size: 1.2rem;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 1rem;
+    gap: 0.4rem;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 0.9rem;
   }
 `;
 
@@ -59,6 +80,15 @@ export const UserButton = styled.button`
     border-color: var(--primary-color);
     box-shadow: none; /* Removed glow */
   }
+
+  @media (max-width: 900px) {
+    padding: 0.25rem 0.6rem 0.25rem 0.3rem;
+    gap: 0.4rem;
+  }
+
+  @media (max-width: 768px) {
+    padding: 0.2rem 0.5rem 0.2rem 0.25rem;
+  }
 `;
 
 export const Avatar = styled.img`
@@ -70,6 +100,16 @@ export const Avatar = styled.img`
   background: 
     linear-gradient(#000, #000) padding-box,
     linear-gradient(135deg, var(--primary-color), var(--accent-color)) border-box;
+
+  @media (max-width: 900px) {
+    width: 30px;
+    height: 30px;
+  }
+
+  @media (max-width: 768px) {
+    width: 26px;
+    height: 26px;
+  }
 `;
 
 export const UserName = styled.span`
@@ -80,6 +120,10 @@ export const UserName = styled.span`
   overflow: hidden;
   text-overflow: ellipsis;
   color: #e2e8f0;
+
+  @media (max-width: 600px) {
+    display: none;
+  }
 `;
 
 export const Dropdown = styled.div<{ $isOpen: boolean }>`
@@ -155,12 +199,26 @@ export const ThemeToggleButton = styled.button`
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
   }
+
+  @media (max-width: 768px) {
+    width: 36px;
+    height: 36px;
+    margin-right: 0.5rem;
+  }
 `;
 
 export const RightSection = styled.div`
   display: flex;
   align-items: center;
   gap: 12px;
+
+  @media (max-width: 900px) {
+    gap: 10px;
+  }
+
+  @media (max-width: 768px) {
+    gap: 6px;
+  }
 `;
 
 export const DropdownLabel = styled.div`
@@ -200,6 +258,24 @@ export const PremiumButton = styled.button`
   svg {
     filter: drop-shadow(0 2px 2px rgba(0,0,0,0.1));
   }
+
+  @media (max-width: 900px) {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.75rem;
+  }
+
+  @media (max-width: 768px) {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.7rem;
+    
+    span {
+      display: none;
+    }
+  }
+
+  @media (max-width: 480px) {
+    padding: 0.25rem;
+  }
 `;
 
 export const PremiumBadge = styled.div`
@@ -219,6 +295,17 @@ export const PremiumBadge = styled.div`
 
   .icon {
     color: var(--primary-color);
+  }
+
+  @media (max-width: 768px) {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.7rem;
+  }
+
+  @media (max-width: 480px) {
+    span {
+      display: none;
+    }
   }
 `;
 

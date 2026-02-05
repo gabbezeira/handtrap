@@ -25,6 +25,18 @@ export const ButtonContainer = styled.button`
   &:active {
     transform: scale(0.95);
   }
+
+  @media (max-width: 768px) {
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    
+    svg {
+      width: 24px;
+      height: 24px;
+    }
+  }
 `;
 
 export const SupportLabel = styled.div<{ $visible: boolean }>`

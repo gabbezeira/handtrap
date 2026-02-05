@@ -7,6 +7,7 @@ export const Container = styled.div`
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  padding: 1rem;
   
   /* Deep Blue Theme Background */
   background: radial-gradient(circle at center, #0f172a 0%, #000000 100%);
@@ -44,7 +45,6 @@ export const GlassCard = styled.div`
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  /* Removed heavy shadow/glow */
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
   padding: 3.5rem 3rem;
   border-radius: 24px;
@@ -55,9 +55,13 @@ export const GlassCard = styled.div`
   transition: transform 0.3s ease;
   animation: fadeIn 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
   z-index: 1;
+  border-top: 1px solid var(--primary-color);
 
-  /* Subtle Clean Border Accent using Primary Color */
-  border-top: 1px solid var(--primary-color); 
+  @media (max-width: 480px) {
+    padding: 2rem 1.5rem;
+    border-radius: 16px;
+    max-width: 100%;
+  }
 `;
 
 export const Title = styled.h1`
@@ -69,13 +73,15 @@ export const Title = styled.h1`
   text-transform: uppercase;
   letter-spacing: 0.05em;
   
-  /* Updated Handtrap to Blue using Global Styles */
   span {
     color: var(--primary-color);
     background: linear-gradient(135deg, var(--accent-color) 0%, var(--primary-color) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    /* Removed text-shadow glow */
+  }
+
+  @media (max-width: 480px) {
+    font-size: 1.8rem;
   }
 `;
 

@@ -129,10 +129,15 @@ export const MetricRow = styled.div`
   }
 `;
 
-export const MetricValue = styled.strong<{ $color?: string }>`
+export const OperationLabel = styled.span`
+  font-size: 0.8rem;
+  opacity: 0.8;
+`;
+
+export const MetricValue = styled.strong<{ $color?: string; $small?: boolean }>`
   color: ${props => props.$color || 'var(--text-primary)'};
   font-family: monospace;
-  font-size: 1rem;
+  font-size: ${props => props.$small ? '0.8rem' : '1rem'};
 `;
 
 export const LoginOverlay = styled.div`

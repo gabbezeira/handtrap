@@ -14,6 +14,10 @@ export const Container = styled.div`
   padding: 2rem;
   width: 100%;
   flex: 1;
+
+  @media (max-width: 768px) {
+    padding: 1rem 0.5rem; /* Reduce padding to give more width to grid */
+  }
 `;
 
 export const TitleSection = styled.div`
@@ -23,15 +27,28 @@ export const TitleSection = styled.div`
   align-items: center;
   border-bottom: 1px solid rgba(62, 147, 252, 0.1);
   padding-bottom: 1.5rem;
+  gap: 1rem;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 `;
 
 export const Title = styled.h1`
   font-size: 2.5rem;
   color: white;
-  color: white;
   
   span {
     color: var(--primary-color);
+  }
+
+  @media (max-width: 768px) {
+    font-size: 1.8rem;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 1.5rem;
   }
 `;
 
@@ -39,6 +56,11 @@ export const ActionsWrapper = styled.div`
   display: flex;
   gap: 12px;
   align-items: center;
+  flex-wrap: wrap;
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 `;
 
 export const WarningBanner = styled.div`
@@ -62,6 +84,16 @@ export const DecksGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 1.5rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  @media (max-width: 480px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem; /* Tighter gap for bigger cards */
+  }
 `;
 
 export const LoadingWrapper = styled.div`
@@ -237,12 +269,16 @@ export const ImportWrapper = styled.div`
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   overflow: hidden;
-  height: 46px; /* Match typical button height with 0.8rem padding */
+  height: 46px;
   align-items: stretch;
   transition: border-color 0.2s;
 
   &:focus-within {
     border-color: var(--primary-color);
+  }
+
+  @media (max-width: 768px) {
+    flex: 1;
   }
 `;
 
@@ -254,9 +290,14 @@ export const ImportInput = styled.input`
   outline: none;
   min-width: 250px;
   font-size: 0.95rem;
+  flex: 1;
 
   &::placeholder {
     color: var(--text-secondary);
+  }
+
+  @media (max-width: 768px) {
+    min-width: 100px;
   }
 `;
 

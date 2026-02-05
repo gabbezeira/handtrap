@@ -7,7 +7,7 @@ import { CardData } from '../../services/cardDatabase';
 import { HandSimulationModal } from '../../components/HandSimulationModal';
 import { UpgradeModal } from '../../components/UpgradeModal';
 import { AiLoader } from '../../components/AiLoader';
-import { Search, Sword, Shield, BrainCircuit, Sparkles, X, Info, Box, Loader2, Save, Dices, Share2, Key } from 'lucide-react';
+import { Search, Sword, Shield, BrainCircuit, Sparkles, X, Info, Box, Loader2, Save, Dices, Share2, Key, Plus } from 'lucide-react';
 import { saveDeck, getDeck } from '../../services/deckService';
 import { analyzeDeckWithCache, analyzeCardWithCache, AiDeckResponse, AiCardResponse } from '../../services/aiAnalysisService';
 import { getDeckAnalysisUsage } from '../../services/usersService';
@@ -82,7 +82,10 @@ import {
   CustomApiBanner,
   CustomApiBannerText,
   CustomApiBannerTitle,
-  CustomApiBannerSubtitle
+  CustomApiBannerSubtitle,
+  MobileAddButtonContainer,
+  MobileAddButton,
+  MobileSearchCloseButton
 } from './styles';
 
 const getCardRarity = (card: CardData): 'UR' | 'SR' | 'R' | 'N' => {
@@ -136,6 +139,7 @@ export const DeckBuilder = () => {
     const [deckAnalysis, setDeckAnalysis] = useState<AiDeckResponse | null>(null);
     const [isAnalyzing, setIsAnalyzing] = useState(false);
     const [analysisUsage, setAnalysisUsage] = useState({ used: 0, limit: 10 });
+    const [showMobileSearch, setShowMobileSearch] = useState(false);
     
     const [userPlan, setUserPlan] = useState<'free' | 'premium'>('free');
 
@@ -742,7 +746,7 @@ export const DeckBuilder = () => {
                 <Header />
                 <LoadingContainer>
                     <Loader2 className="animate-spin" size={32} />
-                    Loading Deck...
+                    Carregando Deck...
                 </LoadingContainer>
             </PageWrapper>
         );
@@ -766,8 +770,8 @@ export const DeckBuilder = () => {
                             onChange={e => setDeckName(e.target.value)} 
                        />
 
-                       <HeaderActions>
-                        <CPContainer>
+                        <HeaderActions>
+                           <CPContainer>
                                <img src={cpurIcon} alt="UR CP" />
                                <CPValueUR>{urCost}</CPValueUR>
                            </CPContainer>
@@ -779,6 +783,7 @@ export const DeckBuilder = () => {
                                <Dices size={16} />
                                Mão
                            </ActionButton>
+                           {/* Mobile Add Button moved below */}
                            <ActionButton $variant="secondary" onClick={() => setShowAI(!showAI)}>
                                <Sparkles size={16} />
                                IA
@@ -792,6 +797,13 @@ export const DeckBuilder = () => {
                            </ActionButton>
                        </HeaderActions>
                     </ColumnHeader>
+
+                    {/* Mobile Only: Full Width Add Button */}
+                    <MobileAddButtonContainer>
+                        <MobileAddButton onClick={() => setShowMobileSearch(true)}>
+                            <Plus size={18} /> ADICIONAR CARD AO DECK
+                        </MobileAddButton>
+                    </MobileAddButtonContainer>
 
                     {showAI ? (
                         <AIContainer>
@@ -861,7 +873,7 @@ export const DeckBuilder = () => {
                 </Column>
 
                 {/* RIGHT: Search Catalog */}
-                <Column>
+                <Column className={showMobileSearch ? 'mobile-open' : ''}>
                     <SearchContainer>
                         <SearchInputRow>
                             <SearchRowInner>
@@ -871,6 +883,11 @@ export const DeckBuilder = () => {
                                     value={searchTerm}
                                     onChange={handleSearchChange}
                                 />
+                                {showMobileSearch && (
+                                    <MobileSearchCloseButton onClick={() => setShowMobileSearch(false)}>
+                                        <X size={20} />
+                                    </MobileSearchCloseButton>
+                                )}
                             </SearchRowInner>
                             <small>
                                  <Info size={14} />

@@ -41,6 +41,12 @@ export const Modal = styled.div`
   display: flex;
   flex-direction: column;
   animation: ${slideUp} 0.3s ease;
+
+  @media (max-width: 480px) {
+    width: 95%;
+    max-height: 90vh;
+    border-radius: 8px;
+  }
 `;
 
 export const Header = styled.div`
@@ -49,6 +55,10 @@ export const Header = styled.div`
   justify-content: space-between;
   padding: 20px 24px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+  @media (max-width: 480px) {
+    padding: 16px 16px;
+  }
 `;
 
 export const Title = styled.h2`

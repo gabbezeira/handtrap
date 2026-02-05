@@ -26,6 +26,22 @@ export const ContentGrid = styled.div`
     pointer-events: none;
     z-index: 0;
   }
+
+  @media (max-width: 1200px) {
+    grid-template-columns: 240px 1fr 260px;
+  }
+
+  @media (max-width: 900px) {
+    grid-template-columns: 200px 1fr 220px;
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto 1fr; /* Header, AddButton, Content */
+    overflow-y: hidden;
+    height: calc(100vh - 50px); /* Explicitly subtract estimated footer height */
+    padding-bottom: 0; 
+  }
 `;
 
 export const Column = styled.div`
@@ -42,6 +58,45 @@ export const Column = styled.div`
     border-right: none;
     background: var(--glass-bg);
   }
+
+  @media (max-width: 768px) {
+    &:nth-child(1) { /* First child is Detail Panel */
+      display: none;
+    }
+
+    &:nth-child(3) { /* Third child is Search */
+      display: none;
+      
+      &.mobile-open {
+        display: flex;
+        position: fixed;
+        inset: 0;
+        z-index: 2000;
+        background: rgba(0, 0, 0, 0.85); /* Backdrop */
+        backdrop-filter: blur(4px);
+        padding: 1rem;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      &.mobile-open > div { /* Target SearchContainer inside */
+        width: 100%;
+        max-width: 500px;
+        height: 85vh;
+        background: var(--bg-secondary);
+        border-radius: 16px;
+        border: 1px solid var(--border-color);
+        box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        overflow: hidden;
+        animation: slideUp 0.3s ease-out;
+      }
+    }
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
 `;
 
 export const ColumnHeader = styled.div`
@@ -54,6 +109,21 @@ export const ColumnHeader = styled.div`
   min-height: 60px;
   flex-shrink: 0;
   backdrop-filter: blur(5px);
+  gap: 1rem;
+
+  @media (max-width: 900px) {
+    padding: 0.6rem 0.8rem;
+    min-height: 45px;
+    gap: 0.5rem;
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 1rem 0.6rem;
+    gap: 1rem;
+    min-height: auto;
+  }
 `;
 
 export const DetailPanel = styled.div`
@@ -66,15 +136,24 @@ export const DetailPanel = styled.div`
   flex-direction: column;
 
   &::-webkit-scrollbar {
-    width: 0px;
+    width: 6px; /* Visible scrollbar for desktop */
     background: transparent;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
   }
 `;
 
 export const DetailContent = styled.div`
-  padding: 1rem;
+  padding: 2rem 1rem;
   position: relative;
   z-index: 2;
+
+  @media (max-width: 768px) {
+    padding: 0.8rem;
+  }
 `;
 
 export const CardBackdrop = styled.div<{ $bgImage?: string }>`
@@ -118,6 +197,14 @@ export const BigCardImage = styled.img`
       0 20px 50px -10px rgba(0,0,0,0.7),
       0 0 0 1px rgba(255,255,255,0.2);
   }
+  
+  @media (max-width: 1200px) {
+    max-width: 120px;
+  }
+  
+  @media (max-width: 900px) {
+    max-width: 100px;
+  }
 `;
 
 export const CardTitle = styled.h2`
@@ -128,6 +215,14 @@ export const CardTitle = styled.h2`
   text-align: center;
   font-family: var(--font-heading);
   text-shadow: 0 4px 10px rgba(0,0,0,0.5);
+
+  @media (max-width: 1200px) {
+    font-size: 1.1rem;
+  }
+
+  @media (max-width: 900px) {
+    font-size: 1rem;
+  }
 `;
 
 export const TagsContainer = styled.div`
@@ -148,6 +243,11 @@ export const Tag = styled.span<{ $color?: string }>`
   letter-spacing: 0.05em;
   border: 1px solid var(--border-color);
   text-transform: uppercase;
+
+  @media (max-width: 1200px) {
+    font-size: 0.7rem;
+    padding: 3px 6px;
+  }
 `;
 
 export const RarityBadge = styled.div<{ $rarity: 'UR' | 'SR' | 'R' | 'N' }>`
@@ -172,6 +272,11 @@ export const RarityBadge = styled.div<{ $rarity: 'UR' | 'SR' | 'R' | 'N' }>`
     }
   }};
   border: none;
+
+  @media (max-width: 1200px) {
+    padding: 2px 6px;
+    font-size: 0.65rem;
+  }
 `;
 
 export const AiButton = styled.button`
@@ -210,6 +315,11 @@ export const AiButton = styled.button`
     cursor: default;
     transform: none;
     filter: grayscale(0.5);
+  }
+
+  @media (max-width: 1200px) {
+    padding: 10px 12px;
+    font-size: 0.85rem;
   }
 `;
 
@@ -347,6 +457,7 @@ export const DeckAreaContainer = styled.div`
   flex-direction: column;
   gap: 1.5rem;
   height: 100%;
+  min-height: 0;
   
   &::-webkit-scrollbar {
     width: 6px;
@@ -354,6 +465,10 @@ export const DeckAreaContainer = styled.div`
   &::-webkit-scrollbar-thumb {
     background: var(--border-color);
     border-radius: 3px;
+  }
+
+  @media (max-width: 768px) {
+    padding-bottom: 200px; /* Massive padding to absolutely guarantee clearance */
   }
 `;
 
@@ -367,6 +482,12 @@ export const DeckSection = styled.div`
   box-shadow: inset 0 0 20px rgba(0,0,0,0.2);
   display: flex;
   flex-direction: column;
+  flex-shrink: 0;
+
+  @media (max-width: 768px) {
+    height: auto;
+    overflow: visible;
+  }
 `;
 
 export const SectionLabel = styled.h3`
@@ -374,9 +495,9 @@ export const SectionLabel = styled.h3`
   text-transform: uppercase;
   letter-spacing: 2px;
   color: var(--accent-color);
-  margin-bottom: 1rem;
   display: flex;
   justify-content: space-between;
+  margin-bottom: 5px;
   align-items: center;
   border-bottom: 1px solid rgba(255,255,255,0.05);
   padding-bottom: 0.5rem;
@@ -384,18 +505,30 @@ export const SectionLabel = styled.h3`
 `;
 
 export const DeckCount = styled.span<{ $isComplete?: boolean }>`
-  color: ${props => props.$isComplete ? 'var(--success-color)' : 'var(--text-secondary)'};
+  color: ${props => props.$isComplete ? 'var(--primary-color)' : 'var(--text-secondary)'};
 `;
 
 export const CardGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(43px, 1fr));
   gap: 6px;
   padding: 0.5rem;
   height: auto;
 
-   @media (min-width: 1400px) {
+  @media (max-width: 480px) {
     grid-template-columns: repeat(auto-fill, minmax(45px, 1fr));
+    gap: 4px;
+    padding: 0.25rem;
+  }
+
+  @media (min-width: 481px) and (max-width: 768px) {
+    grid-template-columns: repeat(auto-fill, minmax(48px, 1fr));
+    gap: 5px;
+  }
+
+  @media (min-width: 769px) and (max-width: 1199px) {
+    grid-template-columns: repeat(auto-fill, minmax(36px, 1fr));
+    gap: 4px;
   }
 `;
 
@@ -487,9 +620,11 @@ export const SearchInputRow = styled.div`
 export const SearchRowInner = styled.div`
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 1rem;
   width: 100%;
 `;
+
+
 
 export const CatalogGrid = styled.div`
   flex: 1;
@@ -499,6 +634,22 @@ export const CatalogGrid = styled.div`
   grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
   gap: 8px;
   align-content: start;
+
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 8px;
+    padding: 0.5rem;
+  }
+
+  @media (max-width: 900px) {
+    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+    gap: 6px;
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    gap: 12px;
+  }
 `;
 
 export const ActionButton = styled.button<{ $variant?: 'primary' | 'secondary' }>`
@@ -528,6 +679,43 @@ export const ActionButton = styled.button<{ $variant?: 'primary' | 'secondary' }
   &:active {
     transform: translateY(0);
   }
+
+  @media (max-width: 900px) {
+    padding: 0.3rem 0.5rem;
+    font-size: 0.75rem;
+    gap: 0.25rem;
+    
+    svg {
+      width: 12px;
+      height: 12px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    justify-content: center;
+    white-space: nowrap;
+    padding: 0.4rem;
+    width: 45px;
+    height: 100%;
+
+    &.mobile-only {
+      display: flex;
+    }
+  }
+  
+  /* Hide mobile-only button on desktop/tablet */
+  &.mobile-only {
+    display: none;
+    @media (max-width: 768px) {
+      display: flex;
+      flex: 0 0 auto;
+    }
+  }
+`;
+
+export const MobileSearchCloseButton = styled(ActionButton)`
+  margin-left: auto;
+  padding: 4px;
 `;
 
 export const DeckNameInput = styled.input`
@@ -559,6 +747,20 @@ export const DeckNameInput = styled.input`
   &::placeholder {
       color: rgba(255,255,255,0.3);
       font-style: italic;
+  }
+
+  @media (max-width: 900px) {
+    font-size: 0.9rem;
+    width: 35%;
+    padding: 4px 8px;
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+    font-size: 1rem;
+    padding: 6px;
+    text-align: center;
+    background: rgba(255,255,255,0.05);
   }
 `;
 
@@ -609,6 +811,19 @@ export const LoadingContainer = styled.div`
 export const HeaderActions = styled.div`
   display: flex;
   gap: 0.8rem;
+  align-items: center;
+
+  @media (max-width: 900px) {
+    gap: 0.5rem;
+  }
+
+  @media (max-width: 768px) {
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 4px; /* Space for scrollbar if needed */
+  }
 `;
 
 // CP Cost Display
@@ -624,6 +839,17 @@ export const CPContainer = styled.div`
   img {
     width: 20px;
     height: 20px;
+  }
+
+  @media (max-width: 900px) {
+    padding: 3px 5px;
+    gap: 3px;
+    border-radius: 6px;
+
+    img {
+      width: 14px;
+      height: 14px;
+    }
   }
 `;
 
@@ -771,3 +997,40 @@ export const SearchEmptyIcon = styled.div`
 export const IconWrapper = styled.div`
   opacity: 0.5;
 `;
+
+export const MobileAddButtonContainer = styled.div`
+  display: none;
+  padding: 0 1rem 0.5rem 1rem;
+  background: var(--glass-heavy);
+  backdrop-filter: blur(5px);
+  z-index: 5;
+
+  @media (max-width: 768px) {
+    display: block;
+  }
+`;
+
+export const MobileAddButton = styled.button`
+  width: 100%;
+  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+
+  &:active {
+    transform: scale(0.98);
+  }
+`;
+

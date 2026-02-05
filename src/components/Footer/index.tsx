@@ -1,5 +1,5 @@
 import { Github, Instagram } from 'lucide-react';
-import { FooterContainer, Link } from './styles';
+import { FooterContainer, Link, Separator } from './styles';
 
 export const Footer = () => {
     return (
@@ -10,7 +10,7 @@ export const Footer = () => {
                 <Instagram /> @gabbezeira
             </Link>
 
-            <span style={{opacity: 0.3}}>|</span>
+            <Separator>|</Separator>
 
             <Link href="https://github.com/gabbezeira/handtrap" target="_blank" rel="noopener noreferrer">
                 <Github /> Open Source

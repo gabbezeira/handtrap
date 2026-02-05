@@ -16,7 +16,8 @@ import {
   LoginTitle,
   PasswordInput,
   ActionButton,
-  LoginActions
+  LoginActions,
+  OperationLabel
 } from './styles';
 
 interface UsageStats {
@@ -134,10 +135,10 @@ export const AdminDashboard = ({ onClose }: { onClose: () => void }) => {
 
                         {usageStats.byOperation && Object.entries(usageStats.byOperation).map(([op, data]) => (
                           <MetricRow key={op}>
-                            <span style={{ fontSize: '0.8rem', opacity: 0.8 }}>
+                            <OperationLabel>
                               {op}: {data.calls}x
-                            </span>
-                            <MetricValue $color="#94a3b8" style={{ fontSize: '0.8rem' }}>
+                            </OperationLabel>
+                            <MetricValue $color="#94a3b8" $small>
                               ${data.cost.toFixed(4)}
                             </MetricValue>
                           </MetricRow>

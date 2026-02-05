@@ -6,7 +6,6 @@ import { MusicProvider } from './contexts/MusicContext';
 import { GlobalStyles } from './styles/GlobalStyles';
 import styled from 'styled-components';
 import { CrtEffect } from './components/CrtEffect';
-import { MobileBlocker } from './components/MobileBlocker';
 import { DebugProvider } from './contexts/DebugContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { Analytics } from "@vercel/analytics/react"
@@ -80,7 +79,7 @@ function App() {
         <DebugProvider>
             <ThemeProvider>
                 <CrtEffect />
-                <MobileBlocker />
+                {/* <MobileBlocker /> */}
                 <GlobalStyles />
                 {showAdmin && <AdminDashboard onClose={() => setShowAdmin(false)} />}
                 <AuthProvider>

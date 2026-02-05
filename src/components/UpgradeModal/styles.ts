@@ -60,6 +60,12 @@ export const PlanColumn = styled.div<{ $isPremium?: boolean }>`
       border-radius: 12px;
     }
   `}
+
+  @media (max-width: 767px) {
+    border-right: none;
+    border-bottom: ${props => !props.$isPremium ? '1px solid var(--border-color)' : 'none'};
+    padding: 1.5rem;
+  }
 `;
 
 export const PlanHeader = styled.div`
