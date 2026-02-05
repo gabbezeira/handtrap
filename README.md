@@ -1,156 +1,163 @@
 # 🃏 Handtrap - Yu-Gi-Oh! Deck Builder & Coach
 
-> **O parceiro definitivo para duelistas modernos.**  
-> Construa, Analise e Otimize seus decks com o poder da Inteligência Artificial.
+<div align="center">
 
-Status: 🚀 **Em Desenvolvimento Ativo**  
-🌐 **Sistema Online**: [handtrap.xyz](https://handtrap.xyz)  
-🔗 **Backend API**: [Repositório Backend](https://github.com/gabbezeira/handtrap-api)
+![Handtrap Logo](https://handtrap.xyz/images/favicon.png)
+
+**O parceiro definitivo para duelistas modernos.**  
+Construa, Analise e Otimize seus decks com o poder da Inteligência Artificial.
+
+[![Live Demo](https://img.shields.io/badge/🌐_Demo-handtrap.xyz-6366f1?style=for-the-badge)](https://handtrap.xyz)
+[![Backend API](https://img.shields.io/badge/🔗_API-api.handtrap.xyz-10b981?style=for-the-badge)](https://api.handtrap.xyz)
+[![Status](https://img.shields.io/badge/Status-Em_Produção-success?style=for-the-badge)]()
+
+</div>
 
 ---
 
 ## 📖 Sobre o Projeto
 
-**Handtrap** é uma aplicação web moderna desenvolvida para jogadores de Yu-Gi-Oh! (Master Duel / TCG) que buscam elevar seu nível de jogo. Diferente de deck builders tradicionais, o Handtrap integra **AI (Google Gemini)** para oferecer insights táticos, sugestões de combos e análises de fraquezas em tempo real.
-
-O projeto foca em uma boa experiência de usuário, com performance otimizada e ferramentas práticas para o dia a dia do duelista.
+**Handtrap** é uma aplicação web moderna desenvolvida para jogadores de Yu-Gi-Oh! (Master Duel / TCG) que buscam elevar seu nível de jogo. Diferente de deck builders tradicionais, o Handtrap integra **IA (Google Gemini)** para oferecer insights táticos, sugestões de combos e análises de fraquezas em tempo real.
 
 ---
 
 ## ✨ Funcionalidades Principais
 
-- **📦 Deck Building Avançado**: Interface drag-and-drop intuitiva com filtros inteligentes e busca instantânea.
-- **🤖 Análise Tática com IA**: Receba feedback detalhado sobre a consistência do seu deck, pontos fracos e sugestões de "tech cards" usando a API do Google Gemini.
-- **🎲 Simulador de Mão**: Teste suas mãos iniciais com um simulador de "Buying Phase" (5 cartas) com opção de Mulligan.
-- **💾 Gestão na Nuvem**: Salve seus decks na nuvem (Firebase) e acesse de qualquer lugar.
-- **⚡ Performance First**: Cache local agressivo (IndexedDB) para carregamento instantâneo de milhares de cartas.
+| Funcionalidade | Descrição |
+|---------------|-----------|
+| **📦 Deck Building** | Interface intuitiva com busca instantânea em PT-BR e EN |
+| **🤖 Análise com IA** | Feedback detalhado sobre consistência, pontos fracos e sugestões |
+| **🎲 Simulador de Mão** | Teste mãos iniciais com análise estratégica da IA |
+| **💾 Cloud Sync** | Decks salvos na nuvem via Firebase |
+| **⚡ Performance** | Cache IndexedDB para carregamento instantâneo |
+| **💎 Plano Premium** | Mais análises diárias com modelo IA avançado (Gemini Pro) |
+| **🔊 Música Ambiente** | Trilha sonora oficial de Yu-Gi-Oh! |
 
 ---
 
 ## 🛠️ Tech Stack
 
-Este projeto foi construído utilizando as melhores práticas e tecnologias do ecossistema React:
+### Frontend
+| Tecnologia | Uso |
+|------------|-----|
+| React 18 + TypeScript | Core |
+| Vite | Build tool |
+| Styled Components | CSS-in-JS |
+| Firebase | Auth + Firestore |
+| IndexedDB | Cache de cartas |
+| Lucide React | Ícones |
 
-- **Core**: [React 18](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/)
-- **Build Tool**: [Vite](https://vitejs.dev/) (Super fast HMR)
-- **Estilização**: [Styled Components](https://styled-components.com/) (CSS-in-JS com temas dinâmicos)
-- **Backend / Auth**: [Firebase](https://firebase.google.com/) (Authentication & Firestore)
-- **Ícones**: [Lucide React](https://lucide.dev/)
-- **AI**: Google Gemini API
+### Backend
+| Tecnologia | Uso |
+|------------|-----|
+| Node.js + Express | API Server |
+| TypeScript | Linguagem |
+| Google Gemini | IA (2.5 Flash/Pro) |
+| Stripe | Pagamentos |
+| Firebase Admin | Auth verification |
 
 ---
 
-## � Backend Endpoints
+## 🚀 Como Executar
 
-O backend oferece os seguintes endpoints para análise de decks e cartas:
-
-| Endpoint | Método | Descrição |
-|----------|--------|----------|
-| `/` | GET | Status do servidor |
-| `/api/health` | GET | Health check (retorna status e timestamp) |
-| `/analyze` | POST | Análise completa de deck via IA (requer corpo JSON com `deckList`) |
-| `/analyze-card` | POST | Análise individual de carta via IA (requer corpo JSON com `cardName`) |
-
-### Variáveis de Ambiente (Backend)
-
-Para executar o backend localmente, crie um arquivo `.env` em `/backend`:
-
-```env
-# Firebase Admin SDK (Obrigatório)
-FIREBASE_PROJECT_ID=seu_project_id
-FIREBASE_CLIENT_EMAIL=seu_service_account_email
-FIREBASE_PRIVATE_KEY="sua_private_key_com_quebras_de_linha"
-
-# Gemini API
-GEMINI_API_KEY=sua_chave_primaria
-GEMINI_API_KEY_BACKUP=sua_chave_backup  # Opcional
-
-# Configuração
-PORT=3000
-NODE_ENV=development
-```
-
-> [!IMPORTANT]
-> **Segurança Implementada**: Os endpoints de análise de IA (`/analyze`, `/analyze-card`) agora requerem **autenticação Firebase**. Usuários não logados receberão erro 401. Rate limiting ativo: 5 análises de deck/min, 10 de cartas/min.
-
-### Executar Backend
+### Frontend
 
 ```bash
-cd backend
+# Clone e entre no diretório
+git clone https://github.com/gabbezeira/handtrap.git
+cd handtrap/frontend
+
+# Instale dependências
 npm install
+
+# Configure variáveis de ambiente
+cp .env.example .env
+# Edite .env com suas credenciais Firebase
+
+# Execute
 npm run dev
 ```
 
-O backend estará disponível em `http://localhost:3000` (ou porta configurada).
+Acesse `http://localhost:5173`
+
+### Variáveis de Ambiente (.env)
+
+```env
+VITE_FIREBASE_API_KEY=sua_key
+VITE_FIREBASE_AUTH_DOMAIN=seu_dominio
+VITE_FIREBASE_PROJECT_ID=seu_project_id
+VITE_FIREBASE_STORAGE_BUCKET=seu_bucket
+VITE_FIREBASE_APP_ID=seu_app_id
+VITE_API_URL=http://localhost:3000/api
+VITE_ADMIN_PASSWORD=sua_senha_admin
+```
 
 ---
 
-## �🚀 Como Executar Localmente
+## 📱 Screenshots
 
-Siga os passos abaixo para contribuir com o projeto:
+<div align="center">
 
-### Pré-requisitos
-- Node.js (v18+)
-- NPM ou Yarn
+| Deck Builder | Análise IA | Simulador de Mão |
+|:------------:|:----------:|:----------------:|
+| ![Deck Builder](https://via.placeholder.com/250x150?text=Deck+Builder) | ![IA Analysis](https://via.placeholder.com/250x150?text=AI+Analysis) | ![Hand Sim](https://via.placeholder.com/250x150?text=Hand+Simulator) |
 
-### Instalação
-
-1. **Clone o repositório**
-   ```bash
-   git clone https://github.com/gabbezeira/handtrap.git
-   cd handtrap/frontend
-   ```
-
-2. **Instale as dependências**
-   ```bash
-   npm install
-   ```
-
-3. **Configure as Variáveis de Ambiente**
-   Crie um arquivo `.env` na raiz do frontend:
-   ```env
-   VITE_FIREBASE_API_KEY=sua_key
-   VITE_FIREBASE_AUTH_DOMAIN=seu_dominio
-   VITE_FIREBASE_PROJECT_ID=seu_project_id
-   VITE_FIREBASE_STORAGE_BUCKET=seu_bucket
-   VITE_FIREBASE_APP_ID=seu_app_id
-   VITE_API_URL=http://localhost:3000
-   ```
-
-4. **Execute o servidor de desenvolvimento**
-   ```bash
-   npm run dev
-   ```
-   Acesse `http://localhost:5173` no seu navegador.
+</div>
 
 ---
 
-## 🔮 Roadmap & Atualizações Futuras
+## 💎 Sistema Premium
 
-Estamos apenas começando! Temos grandes planos para o Handtrap:
-
-- [ ] **🚫 Sistema de Banlist**: Integração automática com as listas de banidas/limitadas (TCG/OCG/Master Duel) para validação de decks em tempo real.
-- [ ] **🏆 Ranking de Decks**: Leaderboard comunitário com os decks mais populares e vitoriosos do meta atual.
-- [ ] **⚔️ Sistema de Campeonatos**: Ferramenta completa para organização de torneios, com geração automática de chaves (Brackets) e gestão de partidas.
-- [ ] **📊 Estatísticas de Duelo**: Histórico de partidas e win-rate analytics para seus decks.
-- [ ] **📱 Mobile App**: Versão nativa (PWA ou React Native) para edição de decks on-the-go.
-
----
-
-## 🤝 Como Contribuir
-
-Contribuições são super bem-vindas! Se você é desenvolvedor, designer ou duelista, sinta-se à vontade para ajudar.
-
-1. Faça um **Fork** do projeto.
-2. Crie uma **Branch** para sua feature (`git checkout -b feature/MinhaFeature`).
-3. Faça o **Commit** (`git commit -m 'Adiciona nova feature incrível'`).
-4. Faça o **Push** (`git push origin feature/MinhaFeature`).
-5. Abra um **Pull Request**.
+| Recurso | Free | Premium |
+|---------|:----:|:-------:|
+| Análise de Deck/dia | 1 | 3 |
+| Análise de Carta/dia | 5 | 10 |
+| Análise de Mão/dia | 3 | 5 |
+| Modelo IA | Flash | **Pro** |
+| API Customizada | ❌ | ✅ |
 
 ---
 
-## 👨‍💻 Créditos
+## 🔮 Roadmap
 
-Desenvolvido com ❤️ e ☕ por **Gabriel Alves** ([@gabbezeira](https://instagram.com/gabbezeira)).
+- [ ] 🚫 Sistema de Banlist automático
+- [ ] 🏆 Ranking de Decks comunitário
+- [ ] ⚔️ Sistema de Torneios
+- [ ] 📊 Analytics de Duelos
+- [ ] 📱 PWA / App Mobile
 
-Projeto Open Source. Junte-se a nós para criar a melhor ferramenta de Yu-Gi-Oh! do mundo.
+---
+
+## 🌐 Links
+
+- **Aplicação**: [handtrap.xyz](https://handtrap.xyz)
+- **API Backend**: [api.handtrap.xyz](https://api.handtrap.xyz)
+- **Repositório Backend**: [github.com/gabbezeira/handtrap-api](https://github.com/gabbezeira/handtrap-api)
+
+---
+
+## 🤝 Contribuição
+
+Contribuições são bem-vindas!
+
+1. Fork o projeto
+2. Crie sua branch (`git checkout -b feature/NovaFeature`)
+3. Commit suas mudanças (`git commit -m 'Add: nova feature'`)
+4. Push para a branch (`git push origin feature/NovaFeature`)
+5. Abra um Pull Request
+
+---
+
+## 👨‍💻 Autor
+
+**Gabriel Alves** - [@gabbezeira](https://instagram.com/gabbezeira)
+
+---
+
+<div align="center">
+
+Made with ❤️ and ☕ for the Yu-Gi-Oh! Community
+
+**[⭐ Star este repositório se foi útil!](https://github.com/gabbezeira/handtrap)**
+
+</div>

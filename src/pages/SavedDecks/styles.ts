@@ -223,6 +223,7 @@ export const CreateButton = styled.button`
   align-items: center;
   gap: 0.5rem;
   transition: all 0.2s;
+  font-family: var(--font-body);
   
   &:hover {
     transform: translateY(-2px);
