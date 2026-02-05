@@ -22,7 +22,7 @@ const MusicContext = createContext<MusicContextType | undefined>(undefined);
 
 export const MusicProvider = ({ children }: { children: ReactNode }) => {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [volume, setVolumeState] = useState(0.3); // 30% default volume
+  const [volume, setVolumeState] = useState(0.10);
   const [isMuted, setIsMuted] = useState(false);
   const [currentTrack, setCurrentTrack] = useState(0);
   const [audio] = useState(() => new Audio());
