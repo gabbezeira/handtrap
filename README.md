@@ -131,7 +131,6 @@ VITE_ADMIN_PASSWORD=sua_senha_admin
 ## 🌐 Links
 
 - **Aplicação**: [handtrap.xyz](https://handtrap.xyz)
-- **API Backend**: [api.handtrap.xyz](https://api.handtrap.xyz)
 - **Repositório Backend**: [github.com/gabbezeira/handtrap-api](https://github.com/gabbezeira/handtrap-api)
 
 ---
