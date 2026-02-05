@@ -703,7 +703,7 @@ export const ActionButton = styled.button<{ $variant?: 'primary' | 'secondary' }
     }
   }
   
-  /* Hide mobile-only button on desktop/tablet */
+
   &.mobile-only {
     display: none;
     @media (max-width: 768px) {
@@ -797,7 +797,7 @@ export const AIContainer = styled.div`
   overflow: hidden;
 `;
 
-// Loading State
+
 export const LoadingContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -807,7 +807,7 @@ export const LoadingContainer = styled.div`
   gap: 12px;
 `;
 
-// Header Actions Group
+
 export const HeaderActions = styled.div`
   display: flex;
   gap: 0.8rem;
@@ -826,7 +826,7 @@ export const HeaderActions = styled.div`
   }
 `;
 
-// CP Cost Display
+
 export const CPContainer = styled.div`
   display: flex;
   align-items: center;
@@ -865,7 +865,7 @@ export const CPValueSR = styled.span`
   font-size: 0.9rem;
 `;
 
-// AI Modal Loading State
+
 export const AiLoadingState = styled.div`
   text-align: center;
   padding: 3rem;
@@ -877,7 +877,7 @@ export const AiLoadingState = styled.div`
   }
 `;
 
-// AI Summary Section
+
 export const AiSummarySection = styled.div`
   margin-bottom: 2rem;
 `;
@@ -937,7 +937,7 @@ export const AiSummaryContent = styled.p`
   border-left: 4px solid var(--primary-color);
 `;
 
-// AI Usage Moments List
+
 export const UsageList = styled.ul`
   display: flex;
   flex-direction: column;
@@ -972,7 +972,7 @@ export const UsageText = styled.span`
   color: #cbd5e1;
 `;
 
-// Search States
+
 export const SearchLoadingState = styled.div`
   padding: 2rem;
   display: flex;
@@ -993,7 +993,7 @@ export const SearchEmptyIcon = styled.div`
   font-size: 2rem;
 `;
 
-// Icon wrapper for opacity
+
 export const IconWrapper = styled.div`
   opacity: 0.5;
 `;

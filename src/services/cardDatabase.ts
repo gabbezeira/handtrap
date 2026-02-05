@@ -22,7 +22,7 @@ export interface CardData {
   card_sets?: { set_name: string; set_code: string; set_rarity: string }[];
 }
 
-// Track loading state
+
 let databaseLoadPromise: Promise<void> | null = null;
 
 // Initialize/Load the database into IndexedDB
@@ -33,7 +33,7 @@ const loadDatabase = async () => {
     try {
       const db = await getDB();
 
-      // Check if we already have data
+
       const count = await db.count('cards');
       if (count > 0) {
         return;
@@ -81,7 +81,7 @@ const loadDatabase = async () => {
 export const searchCardsAPI = async (query: string): Promise<CardData[]> => {
   if (!query || query.length < 2) return [];
 
-  // Ensure DB is ready
+
   await loadDatabase();
 
   const db = await getDB();
@@ -99,7 +99,7 @@ export const searchCardsAPI = async (query: string): Promise<CardData[]> => {
 
   while (cursor && results.length < limit) {
     const card = cursor.value;
-    // Search by Name or Description
+
     if (
       card.name.toLowerCase().includes(lowerQuery) ||
       (card.desc && card.desc.toLowerCase().includes(lowerQuery))
@@ -120,9 +120,9 @@ export const fetchCardsByIds = async (ids: number[]): Promise<CardData[]> => {
 
   const uniqueIds = Array.from(new Set(ids));
 
-  // Fetch in parallel
+
   const cards = await Promise.all(uniqueIds.map((id) => db.get('cards', id)));
 
-  // Filter out undefined (if card not found)
+
   return cards.filter((card): card is CardData => !!card);
 };

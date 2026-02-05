@@ -9,10 +9,10 @@ export const Container = styled.div`
   overflow: hidden;
   padding: 1rem;
   
-  /* Deep Blue Theme Background */
+
   background: radial-gradient(circle at center, #0f172a 0%, #000000 100%);
   
-  /* Animated Orbs - Blue & Cyan - Kept but subtle */
+
   &::before {
     content: '';
     position: absolute;
@@ -113,7 +113,7 @@ export const Input = styled.input`
     outline: none;
     background: rgba(15, 23, 42, 0.8);
     border-color: var(--primary-color);
-    /* Removed box-shadow glow */
+
   }
 
   &::placeholder {
@@ -152,12 +152,12 @@ export const Button = styled.button`
   text-transform: uppercase;
   position: relative;
   overflow: hidden;
-  /* Removed box-shadow */
+
   
   &:hover {
     background-color: var(--accent-color); /* Lighter blue on hover */
     transform: translateY(-1px);
-    /* No glow */
+
   }
 
   &:active {
@@ -183,7 +183,7 @@ export const GoogleButton = styled(Button)`
   
   &:hover {
     background: #f8fafc;
-    /* Subtle shadow only for depth, not glow */
+
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); 
     transform: translateY(-1px);
   }
