@@ -205,7 +205,7 @@ export const PremiumButton = styled.button`
 export const PremiumBadge = styled.div`
   background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(168, 85, 247, 0.1));
   border: 1px solid rgba(168, 85, 247, 0.2);
-  color: #fbbf24;
+  color: var(--primary-color);
   padding: 0.4rem 0.8rem;
   border-radius: 8px;
   font-weight: 700;
@@ -216,6 +216,10 @@ export const PremiumBadge = styled.div`
   text-transform: uppercase;
   letter-spacing: 0.05em;
   user-select: none;
+
+  .icon {
+    color: var(--primary-color);
+  }
 `;
 
 export const ChevronWrapper = styled.span`
